@@ -22,7 +22,11 @@ app.set("view engine", "ejs");
 
 
 app.get("/", function(req, res){
-    res.send("a test homepage");
+    res.render("index");
+});
+
+app.post("/", function(req, res){
+    res.send("you post something...");
 });
 
 
