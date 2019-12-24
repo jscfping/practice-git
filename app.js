@@ -5,7 +5,7 @@ var mongoose = require("mongoose");
 var passport = require("passport");
 var LocalStrategy = require("passport-local");
 var methodOverride = require("method-override");
-//var middleware = require("models/middleware");
+
 
 
 
@@ -22,6 +22,7 @@ db.once("open", function() {
 var User = require("./models/user");
 var Article = require("./models/article");
 var ArticleComment = require("./models/comment/articlecomment");
+var Treasure = require("./models/treasure");
 
 
 // set up express
@@ -51,6 +52,10 @@ app.use(function(req, res, next){
 	res.locals.currentUser = req.user;
 	next();
 });
+
+
+//set up middleware
+var middleware = require("./models/middleware");
 
 
 
@@ -102,7 +107,7 @@ app.post("/register", function(req, res){
 		//http://www.passportjs.org/docs/authenticate/
 		//JS' closure
 		passport.authenticate("local")(req, res, function(){
-		    res.redirect("/uu");
+		    res.redirect("/u");
 		});
     });
 });
@@ -117,7 +122,7 @@ app.get("/login", function(req, res){
 // handling login logic
 app.post("/login",
 	passport.authenticate("local",{
-            successRedirect: "/uu",
+            successRedirect: "/u",
             failureRedirect: "/login"
         }
 	),
@@ -133,7 +138,7 @@ app.get("/logout", function(req, res){
 
 
 
-app.get("/uu",function(req, res){
+app.get("/u",function(req, res){
 	
 	User.find({}, function(err, allusers){
 	    if (err) {
@@ -141,7 +146,7 @@ app.get("/uu",function(req, res){
 			res.send("error!");
 	    }
 	    else {
-	        res.render("users/userpage", {allusers: allusers});
+	        res.render("users/dev", {allusers: allusers});
 	    }
 	});
 
@@ -158,7 +163,9 @@ app.get("/uu",function(req, res){
 
 
 
-
+//articles
+//
+//
 
 //R
 app.get("/articles", function(req, res){
@@ -175,10 +182,7 @@ app.get("/articles", function(req, res){
 			res.send("error!");
 	    }
 	    else {
-			
-			console.log(allarticles);
-
-	        res.render("articles/article", {allarticles: allarticles}); 
+	        res.render("articles/dev", {allarticles: allarticles}); 
 	    }
 	});
 	
@@ -188,7 +192,7 @@ app.get("/articles", function(req, res){
 
 
 //C
-app.post("/articles", function(req, res){
+app.post("/articles", middleware.isLogIned, function(req, res){
 	
 	var newArticle = new Article(req.body.article);
 	newArticle.authorid = req.user._id;
@@ -211,7 +215,7 @@ app.post("/articles", function(req, res){
 
 
 //U
-app.get("/articles/:id/edit", function(req, res){
+app.get("/articles/:id/edit", middleware.checkOwnArticle, function(req, res){
 	Article.findOne({ _id: req.params.id}, function(err, article){
 	    if(err){
 	        console.log(err);
@@ -223,7 +227,7 @@ app.get("/articles/:id/edit", function(req, res){
 	});
 });
 
-app.put("/articles/:id", function(req, res){
+app.put("/articles/:id", middleware.checkOwnArticle, function(req, res){
 	
 	var newdata = req.body.article;
 	newdata.isedited = true;
@@ -245,7 +249,7 @@ app.put("/articles/:id", function(req, res){
 
 
 //D
-app.delete("/articles/:id", function(req, res){
+app.delete("/articles/:id", middleware.checkOwnArticle, function(req, res){
 	Article.deleteOne({_id: req.params.id}, function(err){
 		if(err){
 			console.log(err);
@@ -266,11 +270,52 @@ app.delete("/articles/:id", function(req, res){
 
 
 
+//treasures
+//
+//
+
+//R
+app.get("/treasures", function(req, res){
+	
+	Treasure.find({}, function(err, founds){
+	    if (err) {
+	    	console.log(err);
+			res.send("error!");
+	    }
+	    else {
+	        res.render("treasures/dev", {alltreasures: founds}); 
+	    }
+	});
+
+});
 
 
 
 
-app.get("/getcash",function(req, res){
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+app.get("/getcash", middleware.isLogIned, function(req, res){
 	
 	if(req.user){
 	    User.findOne({_id: req.user._id}, function(err, user){
@@ -315,8 +360,6 @@ app.listen(3000, function(){
 
 
 //function
-
-
 function userInfoInit(obj){
     obj.nickname= obj.username;
 	obj.cash= 0;

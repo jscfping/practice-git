@@ -21,11 +21,39 @@ var userSchema = new mongoose.Schema({
 	nickname: String,
 	age: {type: Number, min: 6, max: 100},
 	cash: {type: Number, min: 0},
-	treasures: [
+	location: String,
+	shoppinglist: [
 		{
-		    type: mongoose.Schema.Types.ObjectId,
-		    ref: "Treasure" //where ref is Treasure of mongoose.model("Treasure", treasureSchema), which means db's collections;
+			id:{
+				type: mongoose.Schema.Types.ObjectId,
+		        ref: "Treasure" //where ref is Treasure of mongoose.model("Treasure", treasureSchema), which means db's collections;
+			},
+		    itemname: String,
+			price: {type: Number, min: 0},
+			qty: {type: Number, min: 0}
         }
+	],
+	shoppedlist: [
+		{
+			id:{
+				type: mongoose.Schema.Types.ObjectId,
+		        ref: "Treasure"
+			},
+		    itemname: String,
+			price: {type: Number, min: 0},
+			qty: {type: Number, min: 0},
+			prices: {type: Number, min: 0},
+			date: Date
+        }
+	],
+	treasures: [
+	    {
+	        id: {
+		        type: mongoose.Schema.Types.ObjectId,
+		        ref: "Treasure"
+            },
+			qty: {type: Number, min: 0}
+		}
 	],
 	articles: [
 		{

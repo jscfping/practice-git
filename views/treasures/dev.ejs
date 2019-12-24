@@ -1,0 +1,49 @@
+<%- include("../partials/header") %>
+
+
+
+<div class="container">
+    
+	
+	<% //sort %>
+	<% alltreasures = alltreasures.sort(function (a, b) { %>
+    <%     return (a.id > b.id ? 1 : -1); %>
+    <% }); %>
+	
+	<% alltreasures.forEach(function(treasure){ %>
+	    
+	    <h3>_id: <%= treasure._id %></h3>
+	    <h3>id: <%= treasure.id %></h3>
+	    <h3>寶物名稱: <%= treasure.name %></h3>
+	    <img src="<%= treasure.image %>">
+	    <h3>描述: <%= treasure.description %></h3>
+	    <h3>分類: <%= treasure.category %></h3>
+	    <h3>價格: <%= treasure.price %></h3>
+	    <h3>是否推薦: <%= treasure.isrecommend %></h3>
+	    <h3>擁有者數量: <%= treasure.ownercount %></h3>
+	    <h3>是否熱銷: <%= treasure.ishotsold %></h3>
+
+
+		<hr>
+	    <!-- comments -->
+
+	<% }); %>
+	
+	
+	
+</div>
+
+
+
+<%- include("../partials/footer") %>
+
+
+
+
+
+
+
+
+
+
+    
