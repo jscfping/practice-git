@@ -10,7 +10,7 @@ var treasureSchema = new mongoose.Schema({
 	category: String,
 	price: {type: Number, default: 99, min: 0},
 	ownercount: {type: Number, default: 0},
-	issold: {type: Boolean, default: false},
+	issold: {type: Boolean, default: true},
 	releasedate: {type: Date, default: Date.now},
 	isrecommend: {type: Boolean, default: false},
 	ishotsold: {type: Boolean, default: false},

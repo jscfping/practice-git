@@ -291,6 +291,39 @@ app.get("/treasures", function(req, res){
 
 
 
+app.post("/treasures", function(req, res){
+	
+	User.findOne({_id: req.user._id}, function(err, found){
+	    if (err) {
+	    	console.log(err);
+			res.send("error!");
+	    }
+	    else {
+			
+			found.shoppinglist.push(req.body.shoppinglist);
+			
+			console.log(found);
+			
+			User.updateOne({_id: req.user._id}, found, function(err, newdata){
+	            if(err){
+	                console.log(err);
+	            }
+		        else{
+	                console.log(newdata + "was added......")
+	            }
+		        res.redirect("/u/");
+	        });
+			
+			
+			
+			
+	    }
+	});
+
+});
+
+
+
 
 
 

@@ -11,6 +11,18 @@ User.find({}, function(err, allusers){
 		console.log(err);
 	}
 	else {
-	    console.log(allusers);
+		
+		console.log(allusers);
+		console.log(">>>" + allusers[0].shoppinglist);
+
+		
 	}
 });
+
+
+
+// User.find().populate("shoppedlist.id").exec(function(err, allusers){
+// 			console.log(allusers);
+// });
+		
+

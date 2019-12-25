@@ -1,6 +1,11 @@
+<% function UTC(x){ %>
+<%     if(x){ %>
+<%         return x.getTime() %>
+<%     } %>
+<% } %>
+
+
 <%- include("../partials/header") %>
-
-
 
 <div class="container">
     
@@ -10,19 +15,26 @@
     <%     return (a.id > b.id ? 1 : -1); %>
     <% }); %>
 	
+	<form action="/treasures" method="POST">
+		<input type="text" name="shoppinglist[id]" placeholder="id">
+		<input type="text" name="shoppinglist[qty]" placeholder="qty">
+		<input type="submit" value="送出">
+	</form>
+	
 	<% alltreasures.forEach(function(treasure){ %>
 	    
-	    <h3>_id: <%= treasure._id %></h3>
-	    <h3>id: <%= treasure.id %></h3>
-	    <h3>寶物名稱: <%= treasure.name %></h3>
+	    <h6>_id: <%= treasure._id %></h6>
+	    <h6>id: <%= treasure.id %></h6>
+	    <h6>寶物名稱: <%= treasure.name %></h6>
 	    <img src="<%= treasure.image %>">
-	    <h3>描述: <%= treasure.description %></h3>
-	    <h3>分類: <%= treasure.category %></h3>
-	    <h3>價格: <%= treasure.price %></h3>
-	    <h3>是否推薦: <%= treasure.isrecommend %></h3>
-	    <h3>擁有者數量: <%= treasure.ownercount %></h3>
-	    <h3>是否熱銷: <%= treasure.ishotsold %></h3>
-
+	    <h6>描述: <%= treasure.description %></h6>
+	    <h6>分類: <%= treasure.category %></h6>
+	    <h6>價格: <%= treasure.price %></h6>
+	    <h6>擁有者數量: <%= treasure.ownercount %></h6>
+	    <h6>販賣中: <%= treasure.issold %></h6>
+	    <h6>上架日期: <UTC><%= UTC(treasure.releasedate) %></UTC></h6>
+	    <h6>是否推薦: <%= treasure.isrecommend %></h6>
+	    <h6>是否熱銷: <%= treasure.ishotsold %></h6>
 
 		<hr>
 	    <!-- comments -->

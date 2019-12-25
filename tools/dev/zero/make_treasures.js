@@ -13,7 +13,8 @@ ts = new Treasure({
 	name: "高興每一天",
     image: "/images/userimages/happy.png",
 	description: "每天都笑嘻嘻~~",
-	category: "userimage"
+	category: "userimage",
+	price: 20
 });
 ts.save(function (err, ty) {
     if (err) return console.error(err);
@@ -71,7 +72,8 @@ ts = new Treasure({
     image: "/images/treasures/images/word_01.png",
 	description: "代表和平、和順",
 	category: "word",
-	ishotsold: true
+	ishotsold: true,
+	price: 999
 });
 ts.save(function (err, ty) {
     if (err) return console.error(err);
