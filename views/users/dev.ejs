@@ -13,11 +13,17 @@
 	    <h3>age: <%= user.age %></h3>
 	    <h3>money: <%= user.cash %></h3>
 	    <h3>location: <%= user.location %></h3>
-	
+	    
+	    <h3>shoppinglist:</h3>
 	    <% user.shoppinglist.forEach(function(el){ %>
-	    <h3><%= el.id %>,<%= el.qty %></h3>
-		
-	    <% });%>
+	        <h6>id:<%= el.id %>, name:<%= el.name %>, price:<%= el.price %>, qty:<%= el.qty %></h6>
+		<% });%>
+	
+	    <h3>shoppEDlist:</h3>
+	    <% user.shoppedlist.forEach(function(el){ %>
+	        <h6>id:<%= el.id %>, price:<%= el.price %>, qty:<%= el.qty %></h6>
+		<% });%>
+	    
 
 
 

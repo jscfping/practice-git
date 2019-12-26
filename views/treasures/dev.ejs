@@ -17,7 +17,9 @@
 	
 	<form action="/treasures" method="POST">
 		<input type="text" name="shoppinglist[id]" placeholder="id">
+		<input type="text" name="shoppinglist[price]" placeholder="price">
 		<input type="text" name="shoppinglist[qty]" placeholder="qty">
+		
 		<input type="submit" value="送出">
 	</form>
 	
@@ -35,6 +37,7 @@
 	    <h6>上架日期: <UTC><%= UTC(treasure.releasedate) %></UTC></h6>
 	    <h6>是否推薦: <%= treasure.isrecommend %></h6>
 	    <h6>是否熱銷: <%= treasure.ishotsold %></h6>
+	    <h6>庫存: <%= treasure.stocks %></h6>
 
 		<hr>
 	    <!-- comments -->

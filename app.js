@@ -249,7 +249,7 @@ app.put("/articles/:id", middleware.checkOwnArticle, function(req, res){
 
 
 //D
-app.delete("/articles/:id", middleware.checkOwnArticle, function(req, res){
+app.delete("/articles/:id", middleware.isLogIned, middleware.checkOwnArticle, function(req, res){
 	Article.deleteOne({_id: req.params.id}, function(err){
 		if(err){
 			console.log(err);
@@ -291,7 +291,13 @@ app.get("/treasures", function(req, res){
 
 
 
-app.post("/treasures", function(req, res){
+
+
+
+
+
+
+app.post("/treasures", middleware.isLogIned, middleware.checkShoppingListAdd, function(req, res){
 	
 	User.findOne({_id: req.user._id}, function(err, found){
 	    if (err) {
@@ -299,41 +305,37 @@ app.post("/treasures", function(req, res){
 			res.send("error!");
 	    }
 	    else {
-			
 			found.shoppinglist.push(req.body.shoppinglist);
 			
-			console.log(found);
-			
-			User.updateOne({_id: req.user._id}, found, function(err, newdata){
-	            if(err){
-	                console.log(err);
-	            }
-		        else{
-	                console.log(newdata + "was added......")
-	            }
-		        res.redirect("/u/");
+			User.updateOne({_id: req.user._id}, found, function(err, rlt){
+	             if(err){
+	                 console.log(err);
+		        	 res.send("updated error!");
+	             }
+		         else{
+                     res.redirect("/u/");
+		        }
 	        });
-			
-			
-			
-			
 	    }
 	});
-
 });
 
 
 
 
+app.get("/checkout", middleware.isLogIned, function(req, res){
+	
+	User.findOne({_id: req.user._id}, function(err, found){
+	    if (err) {
+	    	console.log(err);
+			res.send("error!");
+	    }
+	    else {
 
-
-
-
-
-
-
-
-
+			res.render("users/checkout", {user: found});
+	    }
+	});
+});
 
 
 
@@ -396,6 +398,19 @@ app.listen(3000, function(){
 function userInfoInit(obj){
     obj.nickname= obj.username;
 	obj.cash= 0;
+};
+
+
+
+
+
+//give up
+function checkInObjHasNull(obj){
+	var propertyary = Object.keys(obj)
+	for(var i=0; i<propertyary.length; i++){
+		if(!x[propertyary[i]]) return true;
+	}
+	return false;
 };
 
 

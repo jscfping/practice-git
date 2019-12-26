@@ -1,0 +1,21 @@
+<%- include("../partials/header") %>
+
+
+
+<div class="container">
+
+	<h1>親：<%= user.nickname %>，這是您的採購清單</h1>
+	
+	<% for(var i=0; i<user.shoppinglist.length; i++){ %>
+		
+	    <h3><strong><%= i %></strong>: <img src="<%= user.shoppinglist[i].image %>"><%= user.shoppinglist[i].name %>, 價格<%= user.shoppinglist[i].price %>, 數量<%= user.shoppinglist[i].qty %></h3>
+	
+	
+	<% } %>
+
+	
+	
+	
+</div>
+
+<%- include("../partials/footer") %>
