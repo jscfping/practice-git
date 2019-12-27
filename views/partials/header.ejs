@@ -40,9 +40,6 @@
 				<a href="/getcash" class="nav-link" title="點一下拿一塊">點擊拿現金</a>
 			</li>
 			
-			<li class="nav-item">
-				<a href="/checkout" class="nav-link" title="結帳">結帳</a>
-			</li>
 		</ul>
 		
 	</div>
@@ -54,13 +51,13 @@
 				
 				<% if(currentUser){ %>
 				    <li class="nav-item">
-						<a href="" class="nav-link" title="現在購物車的商品"><img src="/images/icos/shopping_cart-24px.svg" ></a>
+						<a href="/shoppinglist" class="nav-link" title="現在購物車的商品"><img src="/images/icos/shopping_cart-24px.svg" ></a>
 				    </li>
 				    <li class="nav-item">
 				    	<a href="" class="nav-link" title="了解下自己的戰功">擁有$<%= currentUser.cash %></a>
 				    </li>
 				    <li class="nav-item">
-				    	<a href="" class="nav-link nav-pills" title="個人首頁"><%= currentUser.nickname %></a>
+				    	<a href="/u" class="nav-link nav-pills" title="個人首頁"><%= currentUser.nickname %></a>
 				    </li>
 				    <li class="nav-item">
 				    	<a href="/logout" class="nav-link">登出</a>

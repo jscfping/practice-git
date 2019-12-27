@@ -1,0 +1,47 @@
+<% var costsum = 0; %>
+<% var costone = []; %>
+
+<%- include("../partials/header") %>
+
+
+
+<div class="container">
+
+	<h1>親：<%= user.nickname %>，這是您的採購清單</h1>
+	
+	
+	
+	
+	<% for(var i=0; i<user.shoppinglist.length; i++){ %>
+		
+	    <p>
+			<%= i %>: <%= user.shoppinglist[i].id %>,
+		    <img src="<%= user.shoppinglist[i].image %>">
+			<%= user.shoppinglist[i].name %>,
+			價格:<%= user.shoppinglist[i].price %>,
+			數量:<%= user.shoppinglist[i].qty %>,
+			<% costone.push(user.shoppinglist[i].price * user.shoppinglist[i].qty)  %>
+			小計:<%= costone[i] %>
+			
+			<form action="/shoppinglist/<%= user.shoppinglist[i].id %>?_method=DELETE" method="POST">
+	    	    <input type="number" name="shoppinglist[qty]"  value="0">
+	    	    <input type="submit" value="這些還回去架上">
+	        </form>
+	
+	    </p>
+
+	<% } %>
+	
+	<h1>
+		<% costone.forEach(function(x){ %>
+		<% costsum += x; %>
+		<% }) %>
+		合計: <%= costsum %>
+    </h1>
+
+	
+	
+	
+</div>
+
+<%- include("../partials/footer") %>

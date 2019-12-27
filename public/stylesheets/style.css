@@ -5,3 +5,7 @@
 .container{
     margin-top: 6em;
 }
+
+p img{
+    max-height: 100px;
+}

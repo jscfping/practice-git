@@ -15,13 +15,7 @@
     <%     return (a.id > b.id ? 1 : -1); %>
     <% }); %>
 	
-	<form action="/treasures" method="POST">
-		<input type="text" name="shoppinglist[id]" placeholder="id">
-		<input type="text" name="shoppinglist[price]" placeholder="price">
-		<input type="text" name="shoppinglist[qty]" placeholder="qty">
-		
-		<input type="submit" value="送出">
-	</form>
+	
 	
 	<% alltreasures.forEach(function(treasure){ %>
 	    
@@ -39,6 +33,11 @@
 	    <h6>是否熱銷: <%= treasure.ishotsold %></h6>
 	    <h6>庫存: <%= treasure.stocks %></h6>
 
+	    <form action="/shoppinglist/<%= treasure._id %>?_method=PUT" method="POST">
+			<input type="number" name="shoppinglist[qty]" value="0">
+	    	<input type="submit" value="放到購物車內">
+	    </form>
+	
 		<hr>
 	    <!-- comments -->
 

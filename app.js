@@ -116,7 +116,13 @@ app.post("/register", function(req, res){
 
 // show login form
 app.get("/login", function(req, res){
-    res.render("users/login"); 
+	//can be better
+    if(req.user){
+        res.redirect("/"); 
+	}else{
+		res.render("users/login"); 
+	}
+	
 });
 
 // handling login logic
@@ -132,8 +138,13 @@ app.post("/login",
 
 // logout route
 app.get("/logout", function(req, res){
-	req.logout();
-    res.redirect("/"); 
+	if(req.user){
+		req.logout();
+        res.redirect("/"); 
+	}else{
+		res.redirect("/login"); 
+	}
+	
 });
 
 
@@ -297,7 +308,13 @@ app.get("/treasures", function(req, res){
 
 
 
-app.post("/treasures", middleware.isLogIned, middleware.checkShoppingListAdd, function(req, res){
+
+
+
+
+
+//shoppinglist
+app.get("/shoppinglist", middleware.isLogIned, function(req, res){
 	
 	User.findOne({_id: req.user._id}, function(err, found){
 	    if (err) {
@@ -305,36 +322,96 @@ app.post("/treasures", middleware.isLogIned, middleware.checkShoppingListAdd, fu
 			res.send("error!");
 	    }
 	    else {
-			found.shoppinglist.push(req.body.shoppinglist);
-			
-			User.updateOne({_id: req.user._id}, found, function(err, rlt){
-	             if(err){
-	                 console.log(err);
-		        	 res.send("updated error!");
-	             }
-		         else{
-                     res.redirect("/u/");
-		        }
-	        });
+
+			res.render("users/shoppinglist", {user: found});
 	    }
 	});
+});
+
+//shopping list function
+app.put(
+	"/shoppinglist/:id", middleware.isLogIned,
+	middleware.checkshoppingListPush,
+	middleware.shoppingListPush,
+	function(req, res){
+	
+	    User.findOne({_id: req.user._id}, function(err, found){
+	        if (err) {
+	        	console.log(err);
+	    		res.send("can't find user id or sth err");
+	        }
+	        else {
+	    		
+	    		var idx = -1;
+	    		for(var i=0; i<found.shoppinglist.length; i++){
+	    			if(found.shoppinglist[i].id.equals(req.params.id)){
+	    				idx = i;
+	    				break;
+	    			}
+	    		}
+				
+	    		if(idx >= 0){ //already exist
+					//be careful string type...
+	    			found.shoppinglist[idx].qty += Number(req.body.shoppinglist.qty);
+	    		}
+	    		else{
+	    			req.body.shoppinglist.id = req.params.id;
+	    			found.shoppinglist.push(req.body.shoppinglist);
+	    		}
+	    		
+				if(true){
+				    User.updateOne({_id: req.user._id}, found, function(err, sign){
+	                     if(err){
+	                         console.log(err);
+	    	            	 res.send("user database update error!");
+	                     }
+	    	             else{
+                             res.redirect("/shoppinglist");
+	    	            }
+	                });
+				}
+	    		
+	        }
+	    });
+});
+
+
+
+//shopping list function
+app.delete(
+	"/shoppinglist/:id", middleware.isLogIned,
+	middleware.checkshoppingListPop,
+	middleware.shoppingListPop,
+	function(req, res){
+	    res.redirect("/shoppinglist");
 });
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//checkout
 app.get("/checkout", middleware.isLogIned, function(req, res){
 	
-	User.findOne({_id: req.user._id}, function(err, found){
-	    if (err) {
-	    	console.log(err);
-			res.send("error!");
-	    }
-	    else {
 
-			res.render("users/checkout", {user: found});
-	    }
-	});
+			res.render("users/checkout");
+
 });
 
 
@@ -352,21 +429,71 @@ app.get("/checkout", middleware.isLogIned, function(req, res){
 
 app.get("/getcash", middleware.isLogIned, function(req, res){
 	
-	if(req.user){
-	    User.findOne({_id: req.user._id}, function(err, user){
+	if(req.user){ //can be better
+	    User.findOne({_id: req.user._id}, function(err, found){
 	    	if(err){
 	    		console.log(err);
+				res.send("find user id err");
 	    	}
 	    	else{
-	    		user.cash++;
-	    		user.save();
+	    		found.cash += 1000;
+				
+				User.updateOne({_id: req.user._id}, found, function(err, sign){
+	                if(err){
+						console.log();
+	                    res.send("database update error");
+	                } else {
+	                    res.redirect("/");
+	                }
+	            });
+
 	    	}
 	    });
 	}
-	
-    
-	res.redirect("/");
+
 });
+
+
+
+
+
+
+
+//API
+//get treasure's data
+app.get("/api/treasures/:id", function(req, res){
+	
+	Treasure.findOne({_id: req.params.id}, function(err, found){
+	    if(err){
+			console.log(err);
+			res.send("API can't find the treasure, or sth wrong");
+		}
+		else{
+			
+			// var x = found
+			// console.log(x);
+			// x.d = 9;
+			// console.log(x); //there, x DIDN'T HAVE d!!!!!
+			// console.log(x.d);
+			
+
+			
+			if(true){
+				res.send("123");
+			}
+			
+			
+		}
+	});
+});
+
+
+
+
+
+
+
+
 
 
 
@@ -402,9 +529,13 @@ function userInfoInit(obj){
 
 
 
+function UTC(x){
+	if(x){
+        return x.getTime().toString()
+    }
+}
 
-
-//give up
+//useless
 function checkInObjHasNull(obj){
 	var propertyary = Object.keys(obj)
 	for(var i=0; i<propertyary.length; i++){

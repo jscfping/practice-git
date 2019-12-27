@@ -1,4 +1,4 @@
-
+var User = require("./user");
 var Article = require("./article");
 var Treasure = require("./treasure");
 var middleware = {};
@@ -37,29 +37,138 @@ middleware.checkOwnArticle = function(req, res, next){
 
 
 
+middleware.checkshoppingListPush = function(req, res, next){
+	if(Number(req.body.shoppinglist.qty) > 0){
+		next();
+	}
+	else{
+		res.send("qty would >0 and then add your shoppinglist");
+	}
+};
 
-middleware.checkShoppingListAdd = function(req, res, next){
+middleware.shoppingListPush = function(req, res, next){
 
-	var price = Number(req.body.shoppinglist.price);
-	var qty = Number(req.body.shoppinglist.qty);
-	
-	Treasure.findOne({_id: req.body.shoppinglist.id}, function(err, found){
+	Treasure.findOne({_id: req.params.id}, function(err, found){
         if(err){
-			//can't find or sth err
-			res.redirect("back");
+			console.log(err);
+			res.send("can't find user id or sth err");
 		}
 		else{
-			if((qty <= found.stocks) && isNumsEqual(price, found.price)){
-				req.body.shoppinglist.price = found.price;
-				req.body.shoppinglist.name = found.name;
-				req.body.shoppinglist.image = found.image;
-				next();
+	        var qty = Number(req.body.shoppinglist.qty);
+			
+			if(qty <= found.stocks){
+				
+				found.stocks -= qty; 
+
+				//can better? async...
+				if(true){
+					Treasure.updateOne({_id: req.params.id}, found, function(err, sign){
+	                    if(err){
+				    		console.log();
+	                        res.send("Treasure database update error");
+	                    } else {
+				            next();
+	                    }
+	                });
+				}
+
 			}
 			else{
-				res.send("error list!");
+				res.send("we don't have so much stocks");
 			}
 		}
     });
+};
+
+
+
+
+
+
+middleware.checkshoppingListPop = function(req, res, next){
+	
+	if(Number(req.body.shoppinglist.qty) > 0){
+		next();
+	}
+	else{
+		res.send("qty would >0 and then pop your shoppinglist");
+	}
+};
+
+middleware.shoppingListPop = function(req, res, next){
+	
+	User.findOne({_id: req.user._id}, function(err, found){
+	    if (err) {
+	    	console.log(err);
+			res.send("can't find user id or sth err");
+	    }
+	    else {
+			var id = req.params.id;
+	        var qty = Number(req.body.shoppinglist.qty);
+			//can better? async...
+			if(true){
+				Treasure.findOne({_id: id}, function(err, foundts){
+                    if(err){
+		            	console.log(err);
+		            	res.send("can't find item id or sth err");
+		            }
+		            else{
+				    	
+				    	var idx = -1;
+				    	
+				    	for(var i=0; i<found.shoppinglist.length; i++){
+				    		if(found.shoppinglist[i].id.equals(id)){
+				    			idx = i;
+				    			break;
+				    		}
+				    	}
+				    	
+				    	
+				    	if(idx<0){
+				    		res.send("it is not in your shoppinglist");
+				    	}
+				    	else{
+				    		if(qty <= found.shoppinglist[idx].qty){
+				    	    	if(qty < found.shoppinglist[idx].qty){
+				    	    		found.shoppinglist[idx].qty -= qty;
+				    	    	}
+				    	    	else{
+				    	    		found.shoppinglist.splice(idx,1);
+				    	    	}
+				    	    	foundts.stocks += qty ;
+				    	    	//can better? async...
+								if(true){
+									User.updateOne({_id: req.user._id}, found, function(err, sign){
+	                                    if(err){
+				                    		console.log();
+	                                        res.send("users database update error");
+	                                    }
+				    	    	    	else {
+				                            Treasure.updateOne({_id: id}, foundts, function(err, sign){
+	                                            if(err){
+				                            		console.log();
+	                                                res.send("treasures database update error");
+	                                            } else {
+				                                    next();
+	                                            }
+	                                        });
+	                                    }
+	                                });
+								}
+				    	    }
+				    	    else{
+				    	    	res.send("you don't have much qty");
+				    	    }
+				    	}
+		            }
+                });
+			}
+			
+			
+
+	    }
+	});
+
 };
 
 

@@ -29,9 +29,6 @@ var userSchema = new mongoose.Schema({
 				type: mongoose.Schema.Types.ObjectId, // here, when i push sth in this array, i would get created _id in this object. can be better???
 		        ref: "Treasure" // where ref is Treasure of mongoose.model("Treasure", treasureSchema), which means db's collections;
 			},
-			name: String,
-			image: String,
-			price: {type: Number, min: 0},
 			qty: {type: Number, min: 0}
         }
 	],
