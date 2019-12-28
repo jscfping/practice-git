@@ -19,11 +19,12 @@ var userSchema = new mongoose.Schema({
 	created: {type:Date, default:Date.now},
 	lastlogin: Date,
 	nickname: String,
+	desc: String,
 	age: {type: Number, min: 6, max: 100},
-	cash: {type: Number, min: 0},
+	cash: {type: Number, min: 0, default:0},
 	location: String,
 	shoppinglist: [
-		{
+		{   //maybe it would be a shoppinglist schema???
 			// _id: mongoose.objId would be created here
 			id: {
 				type: mongoose.Schema.Types.ObjectId, // here, when i push sth in this array, i would get created _id in this object. can be better???
@@ -34,16 +35,8 @@ var userSchema = new mongoose.Schema({
 	],
 	shoppedlist: [
 		{
-			// _id: mongoose.objId would be created here
-			id: {
-				type: mongoose.Schema.Types.ObjectId,
-		        ref: "Treasure"
-			},
-		    itemname: String,
-			price: {type: Number, min: 0},
-			qty: {type: Number, min: 0},
-			prices: {type: Number, min: 0},
-			date: Date
+		    type: mongoose.Schema.Types.ObjectId,
+		    ref: "ShoppedRecord"
         }
 	],
 	treasures: [

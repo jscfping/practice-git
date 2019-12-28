@@ -15,16 +15,18 @@ middleware.isLogIned = function(req, res, next){
 //is there better script???
 middleware.checkOwnArticle = function(req, res, next){
 	if(req.isAuthenticated()){
-		 Article.findOne({_id:req.params.id}, function(err, found){
+		Article.findOne({_id:req.params.id}, function(err, found){
 			if(err){
 				console.log(err);
-		        res.redirect("back");
+		        res.send("article can't found or sth err");
 			}
 			else{
 				if(found.authorid.equals(req.user._id)){
 					next();
 				}
-				res.send("you didn't have the article's permission!");
+				else{//async!!!!!!!
+					res.send("you didn't have the article's permission!"); 
+				}
 			}
 		})
 	}

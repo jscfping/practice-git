@@ -190,7 +190,7 @@ app.get("/articles", function(req, res){
 	Article.find().populate("authorid").exec(function(err, allarticles){
 	    if (err) {
 	    	console.log(err);
-			res.send("error!");
+			res.send("article found error!");
 	    }
 	    else {
 	        res.render("articles/dev", {allarticles: allarticles}); 
@@ -203,7 +203,7 @@ app.get("/articles", function(req, res){
 
 
 //C
-app.post("/articles", middleware.isLogIned, function(req, res){
+app.post("/articles",middleware.isLogIned, function(req, res){
 	
 	var newArticle = new Article(req.body.article);
 	newArticle.authorid = req.user._id;
@@ -211,14 +211,14 @@ app.post("/articles", middleware.isLogIned, function(req, res){
 	newArticle.save(function (err, article) {
         if (err){
 			console.log(err);
-		    return res.redirect("/");
+		    res.send("article created error!");
 	    }
 		else{
 			console.log(article);
 			console.log("a new data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>added!");
+			res.redirect("/articles"); //redirect to get newed data
 		}
 
-		res.redirect("/articles"); //redirect to get newed data
        
      });
 
@@ -376,7 +376,6 @@ app.put(
 });
 
 
-
 //shopping list function
 app.delete(
 	"/shoppinglist/:id", middleware.isLogIned,
@@ -407,10 +406,10 @@ app.delete(
 
 
 //checkout
-app.get("/checkout", middleware.isLogIned, function(req, res){
+app.post("/checkout", middleware.isLogIned, function(req, res){
 	
 
-			res.render("users/checkout");
+	res.render("users/checkout");
 
 });
 
@@ -466,23 +465,22 @@ app.get("/api/treasures/:id", function(req, res){
 	Treasure.findOne({_id: req.params.id}, function(err, found){
 	    if(err){
 			console.log(err);
-			res.send("API can't find the treasure, or sth wrong");
+			res.send("API can't find the treasure, or sth wrong"); 
 		}
 		else{
 			
 			// var x = found
 			// console.log(x);
 			// x.d = 9;
-			// console.log(x); //there, x DIDN'T HAVE d!!!!!
+			// console.log(x); //there, x DIDN'T HAVE d!!!!!   WHICH is x['_doc']!!!!!!!!!
+			// actually, x is { '$__', 'isNew', 'errors', '_doc', '$locals', '$init' }
 			// console.log(x.d);
-			
 
-			
-			if(true){
-				res.send("123");
-			}
-			
-			
+			var data = found["_doc"];
+			data.releasedate = UTC(data.releasedate);
+
+			res.json(data);
+
 		}
 	});
 });
@@ -502,7 +500,7 @@ app.get("/api/treasures/:id", function(req, res){
 
 
 app.get("*",function(req, res){
-	 res.send("Hello?");
+	 res.send("not found...");
 });
 
 
