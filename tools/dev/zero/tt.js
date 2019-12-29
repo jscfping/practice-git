@@ -89,39 +89,35 @@ var treasuresAry = [
 
 
 
-function seedData(el){
-    return new Promise(function(resolve, reject){
-		el.save(function (err, ele){
-            if(err){
-                reject(err);
-            }
-			console.log(ele + "...added...");
-            resolve(el);
-        });
+
+
+function query(id){
+    return new Promise((resolve, reject)=>{
+		Treasure.findOne({id: id}, function(err, found){
+		    if(err){
+		    	reject(err);
+		    }
+		    else{
+		    	console.log(found);
+		    	resolve(found);
+		    }
+	    });
 	});
 };
 
-var sequence = Promise.resolve();
+
+// var task = [];
+// treasuresAry.forEach((el)=>{
+// 	task.push(query(el.id));
+// });
 
 
-
-Treasure.deleteMany({},function(err){
-    if (err) {
-    	console.log(err);
-    }
-    else {
-        console.log("...CLEAR!");
-		// Loop through our chapter urls
-        treasuresAry.forEach(function(el){
-            // Add these actions to the end of the sequence
-            sequence = sequence.then(function(){
-                return seedData(el); //if then(seedDate(el)) would run in this line, return would be submit
-            });
-        });
-		
-    }
-});
-
+// Promise.all([p1,p2,p3,p4,p5]).then((resolve, reject)=>{
+// 	console.log("===============================================");
+// 	resolve.forEach(function(el){
+// 		console.log(el);
+// 	});
+// });
 
 
 

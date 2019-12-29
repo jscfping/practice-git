@@ -5,39 +5,19 @@ mongoose.set("useUnifiedTopology", true);
 mongoose.connect("mongodb://localhost/cloud_demo", {useNewUrlParser: true});
 
 var Treasure = require("./models/treasure");
+var dbfunc = require("./models/dbfunc");
 
 
+// dbfunc.findById(Treasure, "5e084a993ea46d10a58646ae").then((o,x)=>{
+// 	console.log(o);
+// })
 
 
-Treasure.findOne({_id: "5e022703a537f6fb2c"}, function(err, found){
-    if(err){
-		console.log("err");
-
-	}
-	else{
-		console.log("good");
-	}
-
-    
-});
+// dbfunc.findById(Treasure, "5e084a993ea46d10a58646ae").then(ss(666));
 
 
+dbfunc.findById(Treasure, "5e084a993ea46d10a58646ae").then(()=>{ss(66)});
 
-
-
-var middleware = {Obj:{}};
-
-
-
-middleware.isLogIned= function(req, res, next){
-	if(req.isAuthenticated()){
-		return next();
-	}
-	res.redirect("/login");
-}
-
-
-//
-middleware.checkOwn = function(req, res, next){
-	console.log(this.Obj);
+function ss(x){
+	console.log(x);
 }

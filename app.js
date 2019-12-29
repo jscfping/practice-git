@@ -328,59 +328,28 @@ app.get("/shoppinglist", middleware.isLogIned, function(req, res){
 	});
 });
 
-//shopping list function
+//shopping list add function
 app.put(
-	"/shoppinglist/:id", middleware.isLogIned,
-	middleware.checkshoppingListPush,
-	middleware.shoppingListPush,
+	"/shoppinglist/:id",
+	middleware.isLogIned,
+	middleware.chkMarketOffReq,
+	middleware.marketOff,
+	middleware.shopListIn,
 	function(req, res){
-	
-	    User.findOne({_id: req.user._id}, function(err, found){
-	        if (err) {
-	        	console.log(err);
-	    		res.send("can't find user id or sth err");
-	        }
-	        else {
-	    		
-	    		var idx = -1;
-	    		for(var i=0; i<found.shoppinglist.length; i++){
-	    			if(found.shoppinglist[i].id.equals(req.params.id)){
-	    				idx = i;
-	    				break;
-	    			}
-	    		}
-				
-	    		if(idx >= 0){ //already exist
-					//be careful string type...
-	    			found.shoppinglist[idx].qty += Number(req.body.shoppinglist.qty);
-	    		}
-	    		else{
-	    			req.body.shoppinglist.id = req.params.id;
-	    			found.shoppinglist.push(req.body.shoppinglist);
-	    		}
-	    		
-				if(true){
-				    User.updateOne({_id: req.user._id}, found, function(err, sign){
-	                     if(err){
-	                         console.log(err);
-	    	            	 res.send("user database update error!");
-	                     }
-	    	             else{
-                             res.redirect("/shoppinglist");
-	    	            }
-	                });
-				}
-	    		
-	        }
-	    });
+	    res.redirect("/shoppinglist");
 });
 
 
-//shopping list function
+
+
+
+//shopping list pop function
 app.delete(
-	"/shoppinglist/:id", middleware.isLogIned,
-	middleware.checkshoppingListPop,
-	middleware.shoppingListPop,
+	"/shoppinglist/:id",
+	middleware.isLogIned,
+	middleware.chkShopListOutReq,
+    middleware.shopListOut,
+    middleware.marketOn,
 	function(req, res){
 	    res.redirect("/shoppinglist");
 });
@@ -451,48 +420,6 @@ app.get("/getcash", middleware.isLogIned, function(req, res){
 	}
 
 });
-
-
-
-
-
-
-
-//API
-//get treasure's data
-app.get("/api/treasures/:id", function(req, res){
-	
-	Treasure.findOne({_id: req.params.id}, function(err, found){
-	    if(err){
-			console.log(err);
-			res.send("API can't find the treasure, or sth wrong"); 
-		}
-		else{
-			
-			// var x = found
-			// console.log(x);
-			// x.d = 9;
-			// console.log(x); //there, x DIDN'T HAVE d!!!!!   WHICH is x['_doc']!!!!!!!!!
-			// actually, x is { '$__', 'isNew', 'errors', '_doc', '$locals', '$init' }
-			// console.log(x.d);
-
-			var data = found["_doc"];
-			data.releasedate = UTC(data.releasedate);
-
-			res.json(data);
-
-		}
-	});
-});
-
-
-
-
-
-
-
-
-
 
 
 
