@@ -3,29 +3,50 @@
 
 <%- include("../partials/header") %>
 
+<% var sum = 0 %>
 
+<% function getValue(x){ %>
+<%     if(x){ %>
+<%	       return Number(x); %>
+<%     }else{ %>
+<%	       return Number(0); %>
+<%	   } %>
+<% } %>
 
 <div class="container">
 
-	<h1>親：<%= user.nickname %>，這是您的採購清單</h1>
-	<% for(var i=0; i<user.shoppinglist.length; i++){ %>
-	    <h5>
+	<h1>親：<%= userdata.nickname %>，這是您的採購清單</h1>
+	<% for(var i=0; i<userdata.shoppinglist.length; i++){ %>
+	    <shoppinglist><h5>
+			<% var qty = getValue(userdata.shoppinglist[i].qty) %>
+			<% var price = getValue(userdata.shoppinglist[i].property.price) %>
+			<% var subsum = qty * price %>
+			<% sum += subsum %>
+
+			
 			<%= i %>:
-			<shoppinglistitem><%= user.shoppinglist[i].id %></shoppinglistitem>
-	        數量:<%= user.shoppinglist[i].qty %>
-	    </h5><!-- 小計 -->
+			<%= userdata.shoppinglist[i].id %>,
+			<img src="<%= userdata.shoppinglist[i].property.image %>">
+			名稱:<%= userdata.shoppinglist[i].property.name %>,
+			描述:<%= userdata.shoppinglist[i].property.description %>,
+	        數量:<%= qty %>,
+			單價:<%= price %>,
+			複價:<%= subsum %>
+		</h5></shoppinglist>
 	
 		
-	    <form action="/shoppinglist/<%= user.shoppinglist[i].id %>?_method=DELETE" method="POST">
+	    <form action="/shoppinglist/<%= userdata.shoppinglist[i].id %>?_method=DELETE" method="POST">
 	    	<input type="number" name="shoppinglist[qty]"  value="0">
 	    	<input type="submit" value="這些還回去架上">
 	    </form>
 	
 	<% } %>
-	<shoppinglistsum><!-- 合計 --></shoppinglistsum>
+    <h1>合計:<%= sum %></h1>
+	<form action="/checkout" method="POST">
+	    <input type="submit" value="結帳">
+	</form>
 
-	
-	
+
 	
 </div>
 

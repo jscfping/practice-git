@@ -1,21 +1,18 @@
 
-//handling UTC tag's string
-document.querySelectorAll("UTC").forEach(function(el){
-	var elnum = Number(el.textContent);
-	if(elnum){
-		var utctime = new Date(elnum);
-	    el.textContent = utctime.toLocaleString() + rtnGMT();
-	}
-});
 
-apiGetAllTreasuresInfo();
+UTCtoLocalTime();
 
 
-
-
-
-
-
+function UTCtoLocalTime(){
+	//handling UTC tag's string
+    document.querySelectorAll("UTC").forEach(function(el){
+    	var elnum = Number(el.textContent);
+    	if(elnum){
+    		var utctime = new Date(elnum);
+    	    el.textContent = utctime.toLocaleString() + rtnGMT();
+    	}
+    });
+}
 
 function rtnGMT(){
 	var ans = "(GMT";
@@ -31,14 +28,12 @@ function rtnGMT(){
 	return ans;
 }
 
-
 function apiGetAllTreasuresInfo(){
 	var itemAry = document.querySelectorAll("shoppinglistitem");
 	itemAry.forEach(function(el){
 		apiGetOneTreasureInfo(el);
 	});
 }
-
 
 function apiGetOneTreasureInfo(el){
 	var requestURL = "http://lyppp.run-us-west1.goorm.io/api/treasures/" + el.textContent;
@@ -55,12 +50,5 @@ function apiGetOneTreasureInfo(el){
 			", 價格:" + res["price"];
 	}
 }
-
-
-
-	
-
-
-
 
 

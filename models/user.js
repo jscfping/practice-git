@@ -33,10 +33,10 @@ var userSchema = new mongoose.Schema({
 			qty: {type: Number, min: 0}
         }
 	],
-	shoppedrecord: [
+	deallog: [
 		{
 		    type: mongoose.Schema.Types.ObjectId,
-		    ref: "ShoppedRecord"
+		    ref: "Dealterm"
         }
 	],
 	treasures: [

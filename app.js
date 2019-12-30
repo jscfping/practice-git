@@ -284,8 +284,6 @@ app.delete("/articles/:id", middleware.isLogIned, middleware.checkOwnArticle, fu
 //treasures
 //
 //
-
-//R
 app.get("/treasures", function(req, res){
 	
 	Treasure.find({}, function(err, founds){
@@ -309,28 +307,16 @@ app.get("/treasures", function(req, res){
 
 
 
-
-
-
-
-//shoppinglist
-app.get("/shoppinglist", middleware.isLogIned, function(req, res){
-	
-	User.findOne({_id: req.user._id}, function(err, found){
-	    if (err) {
-	    	console.log(err);
-			res.send("error!");
-	    }
-	    else {
-
-			res.render("users/shoppinglist", {user: found});
-	    }
-	});
+//show shoppinglist
+app.get("/shoppinglist",
+	middleware.isLogIned,
+	middleware.getShoppingListRecipe,
+	function(req, res){
+	    res.render("users/shoppinglist");
 });
 
 //shopping list add function
-app.put(
-	"/shoppinglist/:id",
+app.put("/shoppinglist/:id",
 	middleware.isLogIned,
 	middleware.chkMarketOffReq,
 	middleware.marketOff,
@@ -339,13 +325,8 @@ app.put(
 	    res.redirect("/shoppinglist");
 });
 
-
-
-
-
 //shopping list pop function
-app.delete(
-	"/shoppinglist/:id",
+app.delete("/shoppinglist/:id",
 	middleware.isLogIned,
 	middleware.chkShopListOutReq,
     middleware.shopListOut,
@@ -357,36 +338,22 @@ app.delete(
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //checkout
-app.post("/checkout", middleware.isLogIned, function(req, res){
-	
+//
+//
+app.post("/checkout",
+	middleware.isLogIned,
+    middleware.chkOrderReq,//確認訂單要求
+	middleware.makeOrder,//生成訂單
+	middleware.handDealRecipe,//處理訂單recipe(1)
+	middleware.passItemToUser,//移交物品(2)
+    middleware.chargeUser,//扣款(3)
+	middleware.finishOrder,//完成交易(確認1,2,3完成)
+	function(req, res){
 
-	res.render("users/checkout");
+	res.redirect("/u");
 
 });
-
-
-
-
-
-
 
 
 

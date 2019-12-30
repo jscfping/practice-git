@@ -16,13 +16,20 @@
 	    
 	    <h3>shoppinglist:</h3>
 	    <% user.shoppinglist.forEach(function(el){ %>
-	        <h6>id:<%= el.id %>, name:<%= el.name %>, price:<%= el.price %>, qty:<%= el.qty %></h6>
+	        <h6>id:<%= el.id %>, qty:<%= el.qty %></h6>
 		<% });%>
 	
-	    <h3>shoppEDlist:</h3>
-	    <% user.shoppedlist.forEach(function(el){ %>
-	        <h6>id:<%= el.id %>, price:<%= el.price %>, qty:<%= el.qty %></h6>
+	    <h3>deallog:</h3>
+	    <% user.deallog.forEach(function(el){ %>
+	        <h6>id:<%= el._id %></h6>
 		<% });%>
+	
+	    <h3>treasures:</h3>
+	    <% user.treasures.forEach(function(el){ %>
+	        <h6>id:<%= el.id %>, qty:<%= el.qty %></h6>
+		<% });%>
+	
+
 	    
 
 
