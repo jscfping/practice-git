@@ -174,7 +174,7 @@ app.get("/u",function(req, res){
 
 
 
-//articles
+//articles (pbulic)
 //
 //
 
@@ -187,17 +187,16 @@ app.get("/articles", function(req, res){
 	//and can be id's array
 	//after expansion, the origin obj id would add mongoose's _id and other data
 	// like author.id, author.id._id
+	var entry = "/articles/"
 	Article.find().populate("authorid").exec(function(err, allarticles){
 	    if (err) {
 	    	console.log(err);
 			res.send("article found error!");
 	    }
 	    else {
-	        res.render("articles/dev", {allarticles: allarticles}); 
+	        res.render("articles/dev", {allarticles: allarticles, entry:entry}); 
 	    }
 	});
-	
-    
 });
 
 
@@ -218,22 +217,20 @@ app.post("/articles",middleware.isLogIned, function(req, res){
 			console.log("a new data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>added!");
 			res.redirect("/articles"); //redirect to get newed data
 		}
-
-       
      });
-
 });
 
 
 //U
 app.get("/articles/:id/edit", middleware.checkOwnArticle, function(req, res){
+	var entry = "/articles/";
 	Article.findOne({ _id: req.params.id}, function(err, article){
 	    if(err){
 	        console.log(err);
 			return res.redirect("/articles/");
 	    }
 		else{
-	        res.render("articles/edit", {article: article});
+	        res.render("articles/edit", {article: article, entry:entry});
 	    }
 	});
 });
@@ -260,7 +257,7 @@ app.put("/articles/:id", middleware.checkOwnArticle, function(req, res){
 
 
 //D
-app.delete("/articles/:id", middleware.isLogIned, middleware.checkOwnArticle, function(req, res){
+app.delete("/articles/:id", middleware.checkOwnArticle, function(req, res){
 	Article.deleteOne({_id: req.params.id}, function(err){
 		if(err){
 			console.log(err);
@@ -268,6 +265,116 @@ app.delete("/articles/:id", middleware.isLogIned, middleware.checkOwnArticle, fu
 		res.redirect("/articles");
 	});
 });
+
+
+
+
+
+
+//articles (private)
+//it can be add a function to judge entry to redirect proper place to make code more dry!!!
+//
+
+//R
+app.get("/myarticles", middleware.isLogIned, function(req, res){
+
+	var entry = "/myarticles/";
+	Article.find({authorid: req.user._id}).populate("authorid").exec(function(err, myarticles){
+	    if (err) {
+	    	console.log(err);
+			res.send("article found error!");
+	    }
+	    else {
+	        res.render("articles/dev", {allarticles: myarticles, entry:entry}); 
+	    }
+	});
+});
+
+
+
+//C
+app.post("/myarticles", middleware.isLogIned, function(req, res){
+	
+	var newArticle = new Article(req.body.article);
+	newArticle.authorid = req.user._id;
+	
+	newArticle.save(function (err, article) {
+        if (err){
+			console.log(err);
+		    res.send("article created error!");
+	    }
+		else{
+			console.log(article);
+			console.log("a new data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>added!");
+			res.redirect("/myarticles"); //redirect to get newed data
+		}
+     });
+});
+
+
+//U
+app.get("/myarticles/:id/edit", middleware.checkOwnArticle, function(req, res){
+	var entry = "/myarticles/";
+	Article.findOne({ _id: req.params.id}, function(err, article){
+	    if(err){
+	        console.log(err);
+			return res.redirect("/articles/");
+	    }
+		else{
+	        res.render("articles/edit", {article: article, entry:entry});
+	    }
+	});
+});
+
+app.put("/myarticles/:id", middleware.checkOwnArticle, function(req, res){
+	
+	var newdata = req.body.article;
+	newdata.isedited = true;
+	newdata.edited = new Date;
+	
+	//req.body.blog.body = req.sanitize(req.body.blog.body);wait for update
+	Article.updateOne({ _id: req.params.id}, newdata, function(err, newdata){
+	    if(err){
+	        console.log(err);
+	    }
+		else{
+	        console.log(newdata + "was added......")
+	    }
+		res.redirect("/myarticles/");
+	});
+
+});
+
+
+
+//D
+app.delete("/myarticles/:id", middleware.checkOwnArticle, function(req, res){
+	Article.deleteOne({_id: req.params.id}, function(err){
+		if(err){
+			console.log(err);
+	    }
+		res.redirect("/myarticles");
+	});
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

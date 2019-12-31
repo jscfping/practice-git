@@ -12,7 +12,7 @@
 
 <div class="container">
     
-	<form action="/articles" method="POST">
+	<form action=<%= entry %> method="POST">
 		<input type="text" name="article[title]" placeholder="title">
 		<input type="text" name="article[description]" placeholder="description...">
 		<input type="submit" value="送出">
@@ -30,9 +30,9 @@
 	    
 
 	    <% if(currentUser && (currentUser._id.equals(article.authorid._id))){ // better??? %>
-	        <a href="/articles/<%= article._id %>/edit">edit</a>
+	        <a href="<%= entry %><%= article._id %>/edit">edit</a>
 	
-	        <form action="/articles/<%= article._id %>?_method=delete" method="POST">
+	        <form action="<%= entry %><%= article._id %>?_method=delete" method="POST">
     	        <input type="submit" value="delete">
             </form>
 	    <% }; %>

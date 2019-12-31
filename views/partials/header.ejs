@@ -19,9 +19,12 @@
 	
 	<div class="collapse navbar-collapse">
 		<ul class="navbar-nav">
+			
+			<% if(currentUser){ %>
 			<li class="nav-item">
-				<a href="/articles" class="nav-link" title="看看你發的文章">雲私文</a>
+				<a href="/myarticles" class="nav-link" title="看看你發的文章">雲私文</a>
 			</li>
+			<% } %>
 			<li class="nav-item">
 				<a href="/articles" class="nav-link" title="看看大家的文章">雲大家文</a>
 			</li>
