@@ -14,7 +14,7 @@ var treasureSchema = new mongoose.Schema({
 	releasedate: {type: Date, default: Date.now},
 	isrecommend: {type: Boolean, default: false},
 	ishotsold: {type: Boolean, default: false},
-	stocks: {type: Number, default: 5, min: 0},
+	stocks: {type: Number, default: 99, min: 0},
     comments: [
 		{
 		    type: mongoose.Schema.Types.ObjectId,

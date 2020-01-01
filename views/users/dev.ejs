@@ -7,6 +7,7 @@
 	<h1>Here are all users:</h1>
 	<% allusers.forEach(function(user){ %>
 	    
+	    <h3>id: <%= user._id %></h3>
 	    <h3>username: <%= user.username %></h3>
 	    <h3>password: <%= user.password %>(this would be salt and hash)</h3>
 	    <h3>nicename: <%= user.nickname %></h3>

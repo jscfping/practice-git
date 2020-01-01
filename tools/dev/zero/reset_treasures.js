@@ -83,6 +83,15 @@ var treasuresAry = [
         image: "/images/treasures/images/str_01.png",
 	    description: "又上了一課呢~~~感謝英國的努力www",
 	    category: "string"
+    }),
+	new Treasure({
+	    id: 11,
+	    name: "九星大禮",
+        image: "/images/treasures/images/sur_00.png",
+	    description: "傳說中的九星大禮？有錢還買不到？？？",
+	    category: "SUR",
+		stocks: 0,
+		price: 4294967295
     })
 	
 ];
@@ -105,7 +114,7 @@ var sequence = Promise.resolve();
 
 
 
-Treasure.deleteMany({},function(err){
+Treasure.deleteMany({}, function(err){
     if (err) {
     	console.log(err);
     }

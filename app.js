@@ -15,7 +15,7 @@ mongoose.connect("mongodb://localhost/cloud_demo", {useNewUrlParser: true}); // 
 var db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", function() {
-	console.log("mongoose........connected"); // we're connected!
+	console.log("mongoose........connected");
 });
 
 // mongoose schema setup
@@ -23,6 +23,7 @@ var User = require("./models/user");
 var Article = require("./models/article");
 var ArticleComment = require("./models/comment/articlecomment");
 var Treasure = require("./models/treasure");
+var Event = require("./models/event");
 
 
 // set up express
@@ -56,6 +57,7 @@ app.use(function(req, res, next){
 
 //set up middleware
 var middleware = require("./models/middleware");
+var dbfunc = require("./models/dbfunc");
 
 
 
@@ -96,7 +98,7 @@ app.post("/register", function(req, res){
 	var newUser = new User({username: req.body.username});
 	userInfoInit(newUser); //better method???
 	
-	//here would add a lowcase check
+	//here would add a lowcase check!!!
     
 	User.register(newUser, req.body.password, function(err, user){  //from passport-local-mongoose
         if(err){
@@ -128,7 +130,7 @@ app.get("/login", function(req, res){
 // handling login logic
 app.post("/login",
 	passport.authenticate("local",{
-            successRedirect: "/u",
+            successRedirect: "/user",
             failureRedirect: "/login"
         }
 	),
@@ -149,22 +151,69 @@ app.get("/logout", function(req, res){
 
 
 
-app.get("/u",function(req, res){
-	
+
+
+
+
+app.get("/u", function(req, res){
 	User.find({}, function(err, allusers){
 	    if (err) {
 	    	console.log(err);
-			res.send("error!");
+			res.send("error! users not found...");
 	    }
 	    else {
 	        res.render("users/dev", {allusers: allusers});
 	    }
 	});
-
 });
 
 
 
+app.get("/user", middleware.isLogIned, function(req, res){
+	User.findOne({_id: req.user._id}, function(err, found){
+	    if (err) {
+	    	console.log(err);
+			res.send("error! user not found...");
+	    }
+	    else {
+	        res.render("users/account", {user: found});
+	    }
+	});
+});
+
+
+app.get("/user/edit", middleware.isLogIned,	function(req, res){
+	User.findOne({_id: req.user._id}, function(err, found){
+	    if (err) {
+	    	console.log(err);
+			res.send("error! user not found...");
+	    }
+	    else {
+	        res.render("users/edit", {user: found});
+	    }
+	});
+});
+
+app.put("/user/",
+	middleware.isLogIned,
+	middleware.updateUser, //be care for someone edit his cash...
+	function(req, res){
+	    res.redirect("/user");
+});
+
+
+
+app.get("/user/:id", function(req, res){
+	User.findOne({_id: req.params.id}, function(err, found){
+	    if (err) {
+	    	console.log(err);
+			res.send("error! user not found...");
+	    }
+	    else {
+	        res.render("users/userpage", {user: found});
+	    }
+	});
+});
 
 
 
@@ -202,7 +251,7 @@ app.get("/articles", function(req, res){
 
 
 //C
-app.post("/articles",middleware.isLogIned, function(req, res){
+app.post("/articles", middleware.isLogIned, function(req, res){
 	
 	var newArticle = new Article(req.body.article);
 	newArticle.authorid = req.user._id;
@@ -215,7 +264,27 @@ app.post("/articles",middleware.isLogIned, function(req, res){
 		else{
 			console.log(article);
 			console.log("a new data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>added!");
-			res.redirect("/articles"); //redirect to get newed data
+			
+			User.findOne({_id: req.user._id}, (err, founduser)=>{
+				if(err){
+					console.log(err);
+		            res.send("find user whom the article belonged to  error!");
+				}
+				else{
+					founduser.articles.push(newArticle._id);
+					User.updateOne({_id: req.user._id}, founduser, function(err, sign){
+	                    if(err){
+	                        console.log(err);
+							res.send("update user whom the article belonged to  error!");
+	                    }
+	                	else{
+	                        console.log(sign + "was updated......")
+	                    }
+	                	res.redirect("/articles/");
+	                });
+				}
+			});
+
 		}
      });
 });
@@ -306,7 +375,26 @@ app.post("/myarticles", middleware.isLogIned, function(req, res){
 		else{
 			console.log(article);
 			console.log("a new data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>added!");
-			res.redirect("/myarticles"); //redirect to get newed data
+			
+			User.findOne({_id: req.user._id}, (err, founduser)=>{
+				if(err){
+					console.log(err);
+		            res.send("find user whom the article belonged to  error!");
+				}
+				else{
+					founduser.articles.push(newArticle._id);
+					User.updateOne({_id: req.user._id}, founduser, function(err, sign){
+	                    if(err){
+	                        console.log(err);
+							res.send("update user whom the article belonged to  error!");
+	                    }
+	                	else{
+	                        console.log(sign + "was updated......")
+	                    }
+	                	res.redirect("/myarticles/");
+	                });
+				}
+			});
 		}
      });
 });
@@ -356,31 +444,6 @@ app.delete("/myarticles/:id", middleware.checkOwnArticle, function(req, res){
 		res.redirect("/myarticles");
 	});
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -450,17 +513,50 @@ app.delete("/shoppinglist/:id",
 //
 app.post("/checkout",
 	middleware.isLogIned,
-    middleware.chkOrderReq,//確認訂單要求
-	middleware.makeOrder,//生成訂單
-	middleware.handDealRecipe,//處理訂單recipe(1)
-	middleware.passItemToUser,//移交物品(2)
-    middleware.chargeUser,//扣款(3)
-	middleware.finishOrder,//完成交易(確認1,2,3完成)
+    middleware.chkOrderReq,
+	middleware.makeOrder,
+	middleware.handDealRecipe,
+	middleware.passItemToUser,
+    middleware.chargeUser,
+	middleware.finishOrder,
 	function(req, res){
 
 	res.redirect("/u");
 
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//events
+//
+//
+var eventRoutes    = require("./routes/events");
+app.use("/events", eventRoutes);
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -497,6 +593,15 @@ app.get("/getcash", middleware.isLogIned, function(req, res){
 
 
 
+
+
+app.get("/replenishment",
+	middleware.isLogIned,
+	middleware.isStockOut,
+	middleware.replenishment,
+	function(req, res){
+	    res.redirect("/");
+});
 
 
 

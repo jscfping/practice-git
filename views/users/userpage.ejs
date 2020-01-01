@@ -1,0 +1,40 @@
+
+
+
+
+<% var uid = null; %>
+<% if(currentUser._id){ %>
+<%     uid = currentUser._id.toString(); %>
+<% } %>
+
+
+
+
+
+<%- include("../partials/header") %>
+
+
+<div class="container">
+
+	
+	<% if(uid === user._id.toString()){ %>
+	    <a href="/user/edit">編輯個人資料</a>
+	<% } %>
+	<h3>帳號: <%= user.username %></h3>
+	<h3>暱稱: <%= user.nickname %></h3>
+	<h3>自我介紹: <%= user.desc %></h3>
+	<hr>
+	<h3>擁有寶物:</h3>
+	<% user.treasures.forEach(function(el){ %>
+	    <h6>id:<%= el.id %>, qty:<%= el.qty %></h6>
+	<% });%>
+	<hr>
+	<h3>擁有文章:</h3>
+	<% user.articles.forEach(function(el){ %>
+	    <h6>id:<%= el._id %></h6>
+	<% });%>
+	<hr>
+	
+</div>
+
+<%- include("../partials/footer") %>

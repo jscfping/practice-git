@@ -18,7 +18,7 @@ middleware.isLogIned = function(req, res, next){
 //is there better script???
 middleware.checkOwnArticle = function(req, res, next){
 	if(req.isAuthenticated()){
-		Article.findOne({_id:req.params.id}, function(err, found){
+		Article.findOne({_id: req.params.id}, function(err, found){
 			if(err){
 				console.log(err);
 		        res.send("article can't found or sth err");
@@ -27,7 +27,7 @@ middleware.checkOwnArticle = function(req, res, next){
 				if(found.authorid.equals(req.user._id)){
 					next();
 				}
-				else{//async!!!!!!!
+				else{
 					res.send("you didn't have the article's permission!"); 
 				}
 			}
@@ -85,8 +85,17 @@ middleware.getShoppingListRecipe = function(req, res, next){
 
 middleware.chkMarketOffReq = function(req, res, next){
 	var stu = "......@chkMarketOffReq";
-	if(Number(req.body.shoppinglist.qty) > 0){
-		next();
+	var reqqty = Number(req.body.shoppinglist.qty);
+	if(reqqty > 0){
+		
+		req.body.shoppinglist.qty = Math.floor(reqqty)
+		if(req.body.shoppinglist.qty >=1){
+			next();
+		}
+		else{
+			res.send("your qty is strange....." + stu);
+		}
+		
 	}
 	else{
 		res.send("qty would >0 to add your shoppinglist" + stu);
@@ -158,8 +167,15 @@ middleware.shopListIn = function(req, res, next){
 
 middleware.chkShopListOutReq = function(req, res, next){
 	var stu = "......@chkShopListOffReq";
-	if(Number(req.body.shoppinglist.qty) > 0){
-		next();
+	var reqqty = Number(req.body.shoppinglist.qty);
+	if(reqqty > 0){
+		req.body.shoppinglist.qty = Math.floor(reqqty)
+		if(req.body.shoppinglist.qty >=1){
+			next();
+		}
+		else{
+			res.send("your qty is strange....." + stu);
+		}
 	}
 	else{
 		res.send("qty would >0 to pop your shoppinglist" + stu);
@@ -270,6 +286,8 @@ middleware.chkOrderReq = function(req, res, next){
 							stu = "order has illegal item..." + stu;
 							break;
 						}
+						
+						found.shoppinglist[i].qty = Math.floor(found.shoppinglist[i].qty);
 						if (!(found.shoppinglist[i].qty > 0)){
 							isAllgood = false;
 							stu = "order has illegal qty..." + stu;
@@ -477,6 +495,141 @@ middleware.finishOrder = function(req, res, next){
 	    }
 	});
 };
+
+
+
+
+
+
+
+
+middleware.updateUser = function(req, res, next){
+	var stu = "......@updateUser";
+	
+	dbfunc.findById(User, req.user._id).then(
+	     (resolve, reject)=>{
+			resolve.nickname = req.body.user.nickname;
+			resolve.desc = req.body.user.desc;
+			
+			dbfunc.updateById(User, req.user._id, resolve).then(()=>{
+		        console.log("userdata edited...");
+		        next();
+	        }).catch((e)=>{
+	        	res.send(e + stu);
+	        });
+
+		}
+	 ).catch((e)=>{
+	 	res.send(e + stu);
+	 });
+};
+
+
+	
+	    
+
+
+
+
+
+
+middleware.isStockOut = function(req, res, next){
+	var stu = "......@isStockOut";
+	
+	Treasure.find({}, function(err, tsFounds){
+		
+		var isNeedSupply = false;
+		
+		
+		for(var i=0; i<tsFounds.length; i++){
+			if(tsFounds[i].stocks <= 3){
+				isNeedSupply = true;
+				break;
+			}
+		}
+		
+		if(isNeedSupply){
+			res.locals.tsFounds = tsFounds;
+			next();
+		}
+		else{
+			res.send("stocks are all enough..." + stu);
+		}
+		   
+	});
+}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+middleware.replenishment = function(req, res, next){
+	var stu = "......@replenishment";
+	var AryGottenData = [];
+	var AryPromised = [];   
+	
+	for(var i=0; i<res.locals.tsFounds.length; i++){
+		res.locals.tsFounds[i].stocks = 99;
+		AryGottenData.push(dbfunc.updateById(Treasure, res.locals.tsFounds[i]._id, res.locals.tsFounds[i]));
+		//catch become a resolve for Promise.all
+		AryPromised.push(
+			AryGottenData[i].then(dbfunc.promisePasser).catch(dbfunc.promisePasser)
+		);
+	}
+	
+	//promise.all would catched by just A catch...
+	Promise.all(AryPromised).then((val)=>{
+		
+		console.log("all replenishment done");
+		//val would be a array including each AryPromised promised
+		
+		
+		var isAllDone = true;
+		var updateErrMesg = "";
+		
+		for(var i=0; i <val.length; i++){
+			if(val[i] === "database update error"){
+				updateErrMesg = "database update error in [" + i + "]" + stu;
+				console.log(updateErrMesg);
+				isAllDone = false;
+			}
+		}
+		
+		if(isAllDone){
+			next();
+		}
+	});
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

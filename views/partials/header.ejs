@@ -20,27 +20,31 @@
 	<div class="collapse navbar-collapse">
 		<ul class="navbar-nav">
 			
-			<% if(currentUser){ %>
 			<li class="nav-item">
-				<a href="/myarticles" class="nav-link" title="看看你發的文章">雲私文</a>
-			</li>
-			<% } %>
-			<li class="nav-item">
-				<a href="/articles" class="nav-link" title="看看大家的文章">雲大家文</a>
+				<a href="/articles" class="nav-link" title="看看大家的文章">雲文章</a>
 			</li>
 			<li class="nav-item">
 				<a href="/treasures" class="nav-link" title="寶物買起來~~">雲寶物</a>
 			</li>
 			<li class="nav-item">
-				<a href="" class="nav-link" title="串串別人的API">雲活動1</a>
-			</li>
-			<li class="nav-item">
-				<a href="" class="nav-link" title="串串自己寫的API">雲活動2</a>
+				<a href="/events" class="nav-link" title="各種佛新活動! 還不儲值支持(?">雲活動</a>
 			</li>
 			
-			<li class="nav-item">
-				<a href="/getcash" class="nav-link" title="點一下拿一塊">點擊拿現金</a>
-			</li>
+			<% if(currentUser){ %>
+			    <li class="nav-item">
+			    	<a href="/myarticles" class="nav-link" title="看看你發的文章">雲私文</a>
+			    </li>
+			    <li class="nav-item">
+				    <a href="/getcash" class="nav-link" title="點一下拿一塊">點擊拿現金</a>
+			    </li>
+			    <li class="nav-item">
+				    <a href="/replenishment" class="nav-link" title="告訴小精靈要補貨了，只有任一寶物數量3以下，小精靈才會願意補貨">補貨通知</a>
+			    </li>
+			<% } %>
+			
+			
+			
+			
 			
 		</ul>
 		
@@ -56,10 +60,13 @@
 						<a href="/shoppinglist" class="nav-link" title="現在購物車的商品"><img src="/images/icos/shopping_cart-24px.svg" ></a>
 				    </li>
 				    <li class="nav-item">
-				    	<a href="" class="nav-link" title="了解下自己的戰功">擁有$<%= currentUser.cash %></a>
+				    	<a href="/user/<%= currentUser._id %>" class="nav-link nav-pills" title="個人首頁，大家都看的到那種"><%= currentUser.nickname %></a>
 				    </li>
 				    <li class="nav-item">
-				    	<a href="/u" class="nav-link nav-pills" title="個人首頁"><%= currentUser.nickname %></a>
+				    	<a href="/user/" class="nav-link" title="了解下自己的戰功(即寶物庫，待更新)">擁有$<%= currentUser.cash %></a>
+				    </li>
+				    <li class="nav-item">
+				    	<a href="/user/" class="nav-link nav-pills" title="會員資料，自己看到自己的">會員資料</a>
 				    </li>
 				    <li class="nav-item">
 				    	<a href="/logout" class="nav-link">登出</a>

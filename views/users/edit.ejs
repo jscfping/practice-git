@@ -1,0 +1,28 @@
+<%- include("../partials/header") %>
+
+
+
+<div class="container">
+
+	<h1>編輯個人資料</h1>
+	<hr>
+	<form action="/user?_method=put" method="POST">
+	    <input type="submit" value="編輯完成">
+		<h3>帳號: <%= user.username %></h3>
+		<h3>
+		    暱稱: 
+			<input type="text" name= user[nickname] value="<%= user.nickname %>">
+		</h3>
+		<h3>
+			 自我介紹: 
+			<% if(!user.desc){ %>
+			    <% user.desc = "填一點自我介紹吧..." %>
+			<% } %>
+			<input type="text" name= user[desc] value="<%= user.desc %>">
+		</h3>
+	</form>
+
+
+</div>
+
+<%- include("../partials/footer") %>

@@ -1,0 +1,57 @@
+<% function UTC(x){ %>
+<%     if(x){ %>
+<%         return x.getTime() %>
+<%     } %>
+<% } %>
+
+
+<%- include("../partials/header") %>
+
+<div class="container">
+    
+		
+	
+	
+	<% allevents.forEach(function(event){ %>
+	    
+	    <h6>_id: <%= event._id %></h6>
+	    <h6>活動名稱: <%= event.name %></h6>
+	    <h6>活動描述: <%= event.description %></h6>
+	    <h6>創造時間: <%= event.created %></h6>
+	    <h6>進行中嗎: <%= event.isrunning %></h6>
+	    <h6>完成之使用者id:
+			<% event.finish_uid.forEach((el)=>{ %>
+				<%= el %>,
+			<% }) %>
+	    </h6>
+	    <h6>獎勵金額: <%= event.reward_cash %></h6>
+	    <h6>獎勵寶物:
+			<% event.reward_treasure.forEach((el)=>{ %>
+				[<%= el.id %>, <%= el.qty %>],
+			<% }) %>
+	    </h6>
+	    <a href="/events/<%= event._id %>">連結</a>
+	
+		<hr>
+	    <!-- comments -->
+
+	<% }); %>
+	
+	
+	
+</div>
+
+
+
+<%- include("../partials/footer") %>
+
+
+
+
+
+
+
+
+
+
+    
