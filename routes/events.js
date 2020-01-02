@@ -32,7 +32,7 @@ router.get("/:id", function(req, res){
 			res.send("events found error!");
 	    }
 	    else {
-	        res.render("events/"+req.params.id, {event: founds}); 
+	        res.render("events/e" + founds.eid, {event: founds}); 
 	    }
 	});
 });

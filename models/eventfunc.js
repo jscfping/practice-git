@@ -57,14 +57,16 @@ eventfunc.isUidFinish = function(req, res, next){
 eventfunc.logic = function(req, res, next){
     var stu = "......@logic";
 	
+	var eid = "e" + res.locals.running_event.eid
 	var logicFunFound = true;
 	var tmp_event;  //which lets res get the pop of a obj
-	switch (req.params.id) {
-        case "5e0c02caf462560c0c939c59":
-			tmp_event = eventfunc.logic["_" + req.params.id](req, res);
+
+	switch (eid) {
+        case "e0001":
+			tmp_event = eventfunc.logic["e0001"](req, res);
             break;
-		case "5e0c02caf462560c0c939c5a":
-			tmp_event = eventfunc.logic["_" + req.params.id](req, res);
+		case "e0002":
+			tmp_event = eventfunc.logic["e0002"](req, res);
             break;
         case "test_null":
         default:
@@ -164,7 +166,7 @@ eventfunc.finish = function(req, res, next){
 //each events' logic
 //
 //
-eventfunc.logic._5e0c02caf462560c0c939c59 = function(req, res){
+eventfunc.logic.e0001 = function(req, res){
 	
 	var keyobj = ""; //alway check the valve exist first!
 	
@@ -183,7 +185,7 @@ eventfunc.logic._5e0c02caf462560c0c939c59 = function(req, res){
 }
 
 
-eventfunc.logic._5e0c02caf462560c0c939c5a = function(req, res){
+eventfunc.logic.e0002 = function(req, res){
 	
 	var keyobj = []; //alway check the valve exist first!
 	

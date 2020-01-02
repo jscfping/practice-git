@@ -8,30 +8,35 @@ var Event = require("../../../models/event");
 
 var eventsAry = [
 	new Event({
-	    name: "Hi~Hi~",
+		eid: "0001",
+		name: "Hi~Hi~",
 	    description: "填寫個人描述，讓大家可以更認識你，以拿取獎金~",
 	    isrunning: true,
 		reward_cash: 100
 	}),
 	new Event({
-	    name: "第一則po文",
+		eid: "0002",
+		name: "第一則po文",
 	    description: "po出你的第一則文章，展現你的文采，以拿取獎金~",
 	    isrunning: true,
 		reward_cash: 300
     }),
 	new Event({
-	    name: "雲氣象",
+		eid: "0101",
+		name: "雲氣象",
 	    description: "告訴本雲下雨概率有多少，本雲會送一些些獎金以答謝",
 	    isrunning: true,
 		reward_cash: 700,
     }),
 	new Event({
-	    name: "達成率萬分之一",
+		eid: "0102",
+		name: "達成率萬分之一",
 	    description: "達成率萬分之一的挑戰，你！敢挑戰嗎？挑戰成功有豐富獎金~~~",
 	    isrunning: true,
 		reward_cash: 1000,
     }),
 	new Event({
+		eid: "1001",
 	    name: "登入即送!",
 	    description: "這雲站製作人瘋了！！！ 九星大禮登入即送！？！",
 	    isrunning: true,

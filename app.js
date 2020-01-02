@@ -58,9 +58,10 @@ app.use(function(req, res, next){
 //set up middleware
 var middleware = require("./models/middleware");
 var dbfunc = require("./models/dbfunc");
+var keyy = require("./keyy");
 
 
-
+//console.log(keyy.cwbkey);
 
 
 
@@ -278,7 +279,7 @@ app.post("/articles", middleware.isLogIned, function(req, res){
 							res.send("update user whom the article belonged to  error!");
 	                    }
 	                	else{
-	                        console.log(sign + "was updated......")
+	                        console.log(founduser + "was updated......" + sign)
 	                    }
 	                	res.redirect("/articles/");
 	                });
@@ -296,7 +297,7 @@ app.get("/articles/:id/edit", middleware.checkOwnArticle, function(req, res){
 	Article.findOne({ _id: req.params.id}, function(err, article){
 	    if(err){
 	        console.log(err);
-			return res.redirect("/articles/");
+			res.send("articles database found error...");
 	    }
 		else{
 	        res.render("articles/edit", {article: article, entry:entry});
@@ -311,14 +312,16 @@ app.put("/articles/:id", middleware.checkOwnArticle, function(req, res){
 	newdata.edited = new Date;
 	
 	//req.body.blog.body = req.sanitize(req.body.blog.body);wait for update
-	Article.updateOne({ _id: req.params.id}, newdata, function(err, newdata){
+	Article.updateOne({ _id: req.params.id}, newdata, function(err, sign){
 	    if(err){
-	        console.log(err);
+			console.log(err);
+			res.send("articles database updated error...");
 	    }
 		else{
-	        console.log(newdata + "was added......")
+			console.log(newdata + "was added......" + sign);
+			res.redirect("/articles/");
 	    }
-		res.redirect("/articles/");
+		
 	});
 
 });
@@ -330,8 +333,37 @@ app.delete("/articles/:id", middleware.checkOwnArticle, function(req, res){
 	Article.deleteOne({_id: req.params.id}, function(err){
 		if(err){
 			console.log(err);
-	    }
-		res.redirect("/articles");
+			res.send("articles database deleded error...");
+		}
+		User.findOne({_id: req.user._id}, (err, foundusr)=>{
+
+			if(err){
+				console.log(err);
+			    res.send("user database find error...");
+			}
+			else{
+				for(var i=0; i<foundusr.articles.length; i++){
+					if(foundusr.articles[i]._id.toString() === req.params.id.toString()){
+						foundusr.articles.splice(i,1);
+						break;
+					}
+				}
+	
+				User.updateOne({_id: req.user._id}, foundusr, (err, sign)=>{
+					if(err){
+						console.log(err);
+						res.send("user database updated error...");
+					}
+					else{
+                        res.redirect("/articles");
+					}
+
+				});
+			}
+
+			
+		});
+		
 	});
 });
 
@@ -389,12 +421,13 @@ app.post("/myarticles", middleware.isLogIned, function(req, res){
 							res.send("update user whom the article belonged to  error!");
 	                    }
 	                	else{
-	                        console.log(sign + "was updated......")
+	                        console.log(founduser + "was updated......" + sign)
 	                    }
 	                	res.redirect("/myarticles/");
 	                });
 				}
 			});
+
 		}
      });
 });
@@ -406,7 +439,7 @@ app.get("/myarticles/:id/edit", middleware.checkOwnArticle, function(req, res){
 	Article.findOne({ _id: req.params.id}, function(err, article){
 	    if(err){
 	        console.log(err);
-			return res.redirect("/articles/");
+			res.send("articles database found error...");
 	    }
 		else{
 	        res.render("articles/edit", {article: article, entry:entry});
@@ -421,14 +454,16 @@ app.put("/myarticles/:id", middleware.checkOwnArticle, function(req, res){
 	newdata.edited = new Date;
 	
 	//req.body.blog.body = req.sanitize(req.body.blog.body);wait for update
-	Article.updateOne({ _id: req.params.id}, newdata, function(err, newdata){
+	Article.updateOne({ _id: req.params.id}, newdata, function(err, sign){
 	    if(err){
-	        console.log(err);
+			console.log(err);
+			res.send("articles database updated error...");
 	    }
 		else{
-	        console.log(newdata + "was added......")
+			console.log(newdata + "was added......" + sign);
+			res.redirect("/myarticles/");
 	    }
-		res.redirect("/myarticles/");
+		
 	});
 
 });
@@ -440,8 +475,37 @@ app.delete("/myarticles/:id", middleware.checkOwnArticle, function(req, res){
 	Article.deleteOne({_id: req.params.id}, function(err){
 		if(err){
 			console.log(err);
-	    }
-		res.redirect("/myarticles");
+			res.send("articles database deleded error...");
+		}
+		User.findOne({_id: req.user._id}, (err, foundusr)=>{
+
+			if(err){
+				console.log(err);
+			    res.send("user database find error...");
+			}
+			else{
+				for(var i=0; i<foundusr.articles.length; i++){
+					if(foundusr.articles[i]._id.toString() === req.params.id.toString()){
+						foundusr.articles.splice(i,1);
+						break;
+					}
+				}
+	
+				User.updateOne({_id: req.user._id}, foundusr, (err, sign)=>{
+					if(err){
+						console.log(err);
+						res.send("user database updated error...");
+					}
+					else{
+                        res.redirect("/myarticles");
+					}
+
+				});
+			}
+
+			
+		});
+		
 	});
 });
 

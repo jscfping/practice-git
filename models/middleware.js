@@ -543,8 +543,15 @@ middleware.isStockOut = function(req, res, next){
 		
 		for(var i=0; i<tsFounds.length; i++){
 			if(tsFounds[i].stocks <= 3){
-				isNeedSupply = true;
-				break;
+
+				if(tsFounds[i].category === "SUR"){
+
+				}
+				else{
+                    isNeedSupply = true;
+				    break;
+				}
+				
 			}
 		}
 		
@@ -573,7 +580,14 @@ middleware.replenishment = function(req, res, next){
 	var AryPromised = [];   
 	
 	for(var i=0; i<res.locals.tsFounds.length; i++){
-		res.locals.tsFounds[i].stocks = 99;
+		
+		if(res.locals.tsFounds[i].category === "SUR"){
+
+		}
+		else{
+            res.locals.tsFounds[i].stocks = 99;
+		}
+		
 		AryGottenData.push(dbfunc.updateById(Treasure, res.locals.tsFounds[i]._id, res.locals.tsFounds[i]));
 		//catch become a resolve for Promise.all
 		AryPromised.push(

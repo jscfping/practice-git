@@ -3,7 +3,8 @@
 var mongoose = require("mongoose");
 
 var eventSchema = new mongoose.Schema({
-    name: String,
+	eid: String,
+	name: String,
 	description: String,
 	created: {type: Date, default: Date.now},
 	date_start: Date,
