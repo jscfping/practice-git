@@ -61,10 +61,6 @@ var dbfunc = require("./models/dbfunc");
 var keyy = require("./keyy");
 
 
-//console.log(keyy.cwbkey);
-
-
-
 
 
 

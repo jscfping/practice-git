@@ -5,6 +5,7 @@ var router  = express.Router();  //var router  = express.Router({mergeParams: tr
 var dbfunc = require("../models/dbfunc");
 var middleware = require("../models/middleware");
 var eventfunc = require("../models/eventfunc");
+var apiCWB = require("./api/apicwb");
 
 var Event = require("../models/event");
 var User = require("../models/user");
@@ -32,7 +33,15 @@ router.get("/:id", function(req, res){
 			res.send("events found error!");
 	    }
 	    else {
-	        res.render("events/e" + founds.eid, {event: founds}); 
+			if(founds.eid == "0101"){
+				var passObj = {};
+				passObj.event = founds;
+				passObj.event_ex = founds;
+                res.render("events/e" + founds.eid, passObj); 
+			}else{
+			    res.render("events/e" + founds.eid, {event: founds}); 
+			}
+	        
 	    }
 	});
 });

@@ -1,6 +1,5 @@
 
 var dbfunc = require("./dbfunc");
-var middleware = require("./middleware");
 
 var Event = require("./event");
 var User = require("./user");
@@ -11,7 +10,7 @@ var eventfunc = {};
 
 
 
-eventfunc.find = function(req, res, next){
+eventfunc.find = function(reqapiCWB res, next){
     var stu = "......@find";
 	dbfunc.findById(Event, req.params.id).then(
 	    (resolve, reject)=>{
@@ -67,6 +66,9 @@ eventfunc.logic = function(req, res, next){
             break;
 		case "e0002":
 			tmp_event = eventfunc.logic["e0002"](req, res);
+			break;
+		case "e0101":
+			tmp_event = eventfunc.logic["e0101"](req, res);
             break;
         case "test_null":
         default:
@@ -166,6 +168,7 @@ eventfunc.finish = function(req, res, next){
 //each events' logic
 //
 //
+//user's desc event
 eventfunc.logic.e0001 = function(req, res){
 	
 	var keyobj = ""; //alway check the valve exist first!
@@ -184,7 +187,7 @@ eventfunc.logic.e0001 = function(req, res){
 	return res.locals.running_event;
 }
 
-
+//user's article event
 eventfunc.logic.e0002 = function(req, res){
 	
 	var keyobj = []; //alway check the valve exist first!
@@ -203,7 +206,42 @@ eventfunc.logic.e0002 = function(req, res){
 	return res.locals.running_event;
 }
 
+//cwb api event
+eventfunc.logic.e0101 = function(req, res){
+	
+	var keyobj = {}; //alway check the valve exist first!
+	req.body.cwbans
+	//key.obj init()
 
+	if(keyobj.Suc){
+		res.locals.running_event.isSuc = true;
+	}
+	else{
+		res.locals.running_event.isSuc = false;
+		res.locals.running_event.result = "fail reason"
+	}
+	return res.locals.running_event;
+}
+
+
+
+
+//sample event
+eventfunc.logic.e0000 = function(req, res){
+	
+	var keyobj = {}; //alway check the valve exist first!
+	
+	//key.obj init()
+
+	if(keyobj.Suc){
+		res.locals.running_event.isSuc = true;
+	}
+	else{
+		res.locals.running_event.isSuc = false;
+		res.locals.running_event.result = "fail reason"
+	}
+	return res.locals.running_event;
+}
 
 
 
