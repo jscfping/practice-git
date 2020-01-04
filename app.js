@@ -106,7 +106,15 @@ app.post("/register", function(req, res){
 		//http://www.passportjs.org/docs/authenticate/
 		//JS' closure
 		passport.authenticate("local")(req, res, function(){
-		    res.redirect("/u");
+			Event.findOne({eid: "1001"}, (err, found)=>{
+				if(err){
+					res.send("not find event page...");
+				}
+				else{
+					res.redirect("/events/" + found._id);
+				}
+			})
+			
 		});
     });
 });
@@ -166,17 +174,21 @@ app.get("/u", function(req, res){
 
 
 
-app.get("/user", middleware.isLogIned, function(req, res){
-	User.findOne({_id: req.user._id}, function(err, found){
-	    if (err) {
-	    	console.log(err);
-			res.send("error! user not found...");
-	    }
-	    else {
-	        res.render("users/account", {user: found});
-	    }
-	});
+app.get("/user",
+	middleware.isLogIned,
+	middleware.findUser, //it can be rebased with closure
+	middleware.findAllTreasures,
+	middleware.findUserArticles,
+	middleware.findUserDeallogs,
+	function(req, res){
+		res.render("users/account", {
+			user: res.locals.foundUser,
+			foundAllTreasures: res.locals.foundAllTreasures,
+			foundUserArticles: res.locals.foundUserArticles,
+			foundUserDeallogs: res.locals.foundUserDeallogs
+		});
 });
+
 
 
 app.get("/user/edit", middleware.isLogIned,	function(req, res){

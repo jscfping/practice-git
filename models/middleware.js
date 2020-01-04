@@ -14,7 +14,7 @@ middleware.isLogIned = function(req, res, next){
 	res.redirect("/login");
 };
 
-
+//it can be rebased with closure!!!!!
 //is there better script???
 middleware.checkOwnArticle = function(req, res, next){
 	if(req.isAuthenticated()){
@@ -623,6 +623,60 @@ middleware.replenishment = function(req, res, next){
 
 
 
+middleware.findUser = function(req, res, next){
+	var stu = "......@findUser";
+	dbfunc.findById(User, req.user._id).then((resolve)=>{
+		res.locals.userdata = resolve;
+		next();
+	}).catch((e)=>{
+        res.send(e + stu);
+	});
+}
+
+
+middleware.findUser = function(req, res, next){
+	var stu = "......@findUser";
+	dbfunc.findById(User, req.user._id).then((resolve)=>{
+		res.locals.foundUser = resolve;
+		next();
+	}).catch((e)=>{
+        res.send(e + stu);
+	});
+}
+
+middleware.findAllTreasures = function(req, res, next){
+	var stu = "......@findAllTreasures";
+	dbfunc.findsByProp(Treasure, {}).then((resolve)=>{
+		res.locals.foundAllTreasures = resolve;
+		next();
+	}).catch((e)=>{
+        res.send(e + stu);
+	});
+}
+
+
+middleware.findUserArticles = function(req, res, next){
+	var stu = "......@findUserArticles";
+	dbfunc.findsByProp(Article, {authorid: req.user._id}).then((resolve)=>{
+		res.locals.foundUserArticles = resolve;
+		next();
+	}).catch((e)=>{
+        res.send(e + stu);
+	});
+}
+
+middleware.findUserDeallogs = function(req, res, next){
+	var stu = "......@findUserDeallogs";
+	Dealterm.find({ownerid: req.user._id}).populate("dealrecipe").exec((err, founds)=>{
+        if(err){
+		    res.send(err + stu);
+		}
+		else{
+			res.locals.foundUserDeallogs = founds;
+			next();
+		}
+	});
+}
 
 
 
@@ -634,23 +688,9 @@ middleware.replenishment = function(req, res, next){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// function
+//
+//
 function isNumsEqual(num1, num2){
 	return ((Math.abs(num1 - num2) < 0.001) ? true : false);
 }

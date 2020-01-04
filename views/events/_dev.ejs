@@ -4,14 +4,15 @@
 <%     } %>
 <% } %>
 
+<% var uid = null %>
+<% var isUidFinished = -1 %>
+<% if(currentUser){ %>
+	<% uid = currentUser._id %>
+<% } %>
 
 <%- include("../partials/header") %>
 
-<div class="container">
-    
-		
-	
-	
+<div class="container"><list>
 	<% allevents.forEach(function(event){ %>
 	    
 	    <h6>_id: <%= event._id %></h6>
@@ -27,10 +28,24 @@
 	    <h6>獎勵金額: <%= event.reward_cash %></h6>
 	    <h6>獎勵寶物:
 			<% event.reward_treasure.forEach((el)=>{ %>
-				[<%= el.id %>, <%= el.qty %>],
+				<% for(var i=0; i<treasures.length; i++){ %>
+                    <% if(treasures[i].id.toString() === el.id.toString() ){ %>
+						[<%= el.id %>,
+						<img src="<%= treasures[i].image %>">
+						<%= treasures[i].name %>,
+						描述:<%= treasures[i].description %>,
+						數量:<%= el.qty %>],
+						<% break; %>
+					<% } %>
+				<% } %>
 			<% }) %>
 	    </h6>
-	    <a href="/events/<%= event._id %>">連結</a>
+		<a href="/events/<%= event._id %>">連結</a>
+		<% isUidFinished = event.finish_uid.indexOf(uid) %>
+		<% if(isUidFinished >= 0){ %>
+            <h3>已完成</h3>
+		<% } %>
+		
 	
 		<hr>
 	    <!-- comments -->
@@ -38,7 +53,7 @@
 	<% }); %>
 	
 	
-	
+</list>
 </div>
 
 

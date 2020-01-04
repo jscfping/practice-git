@@ -17,7 +17,7 @@
 
 	<h1>親：<%= userdata.nickname %>，這是您的採購清單</h1>
 	<% for(var i=0; i<userdata.shoppinglist.length; i++){ %>
-	    <shoppinglist><h5>
+	    <list><h5>
 			<% var qty = getValue(userdata.shoppinglist[i].qty) %>
 			<% var price = getValue(userdata.shoppinglist[i].property.price) %>
 			<% var subsum = qty * price %>
@@ -32,7 +32,7 @@
 	        數量:<%= qty %>,
 			單價:<%= price %>,
 			複價:<%= subsum %>
-		</h5></shoppinglist>
+		</h5></list>
 	
 		
 	    <form action="/shoppinglist/<%= userdata.shoppinglist[i].id %>?_method=DELETE" method="POST">

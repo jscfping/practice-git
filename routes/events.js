@@ -7,6 +7,8 @@ var eventfunc = require("../models/eventfunc");
 
 
 var Event = require("../models/event");
+var Treasure = require("../models/treasure");
+
 
 router.get("/", function(req, res){
 	Event.find({}, function(err, founds){
@@ -15,7 +17,18 @@ router.get("/", function(req, res){
 			res.send("events found error!");
 	    }
 	    else {
-	        res.render("events/_dev", {allevents: founds}); 
+			Treasure.find({}, (err, treasures)=>{
+                if(err){
+					console.log(err);
+					res.send("event page's treasures init error");
+				}
+				else{
+					res.render("events/_dev", {
+						user: req.user, allevents: founds,
+						treasures: treasures
+					}); 
+				}
+			});
 	    }
 	});
 });

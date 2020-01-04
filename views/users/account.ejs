@@ -1,10 +1,18 @@
 <%- include("../partials/header") %>
 
+<% function UTC(x){ %>
+	<%     if(x){ %>
+	<%         return x.getTime() %>
+	<%     } %>
+	<% } %>
 
 
-<div class="container">
+
+
+<div class="container"><list>
 
 	<a href="/user/edit">編輯個人資料</a>
+	<h3>id: <%= user._id %></h3>
 	<h3>帳號: <%= user.username %></h3>
 	<h3>暱稱: <%= user.nickname %></h3>
 	<h3>持有$$: <%= user.cash %></h3>
@@ -12,30 +20,88 @@
 	<hr>
 	<h3>購物車:</h3>
 	<% user.shoppinglist.forEach(function(el){ %>
-	    <h6>id:<%= el.id %>, qty:<%= el.qty %></h6>
+	    <h6>
+			<% for(var i=0; i<foundAllTreasures.length; i++){ %>
+				<% if(foundAllTreasures[i]._id.toString() === el.id.toString() ){ %>
+					[id:<%= el.id %>,
+					<img src="<%= foundAllTreasures[i].image %>">
+					<%= foundAllTreasures[i].name %>,
+					描述:<%= foundAllTreasures[i].description %>,
+					數量:<%= el.qty %>],
+					<% break; %>
+				<% } %>
+			<% } %>
+		</h6>
 	<% });%>
 	<hr>
 	<h3>擁有寶物:</h3>
 	<% user.treasures.forEach(function(el){ %>
-	    <h6>id:<%= el.id %>, qty:<%= el.qty %></h6>
+	    <h6>
+			<% for(var i=0; i<foundAllTreasures.length; i++){ %>
+				<% if(foundAllTreasures[i]._id.toString() === el.id.toString() ){ %>
+					[id:<%= el.id %>,
+					<img src="<%= foundAllTreasures[i].image %>">
+					<%= foundAllTreasures[i].name %>,
+					描述:<%= foundAllTreasures[i].description %>,
+					數量:<%= el.qty %>],
+					<% break; %>
+				<% } %>
+			<% } %>
+		</h6>
 	<% });%>
 	<hr>
 	<h3>交易記錄:</h3>
-	<% user.deallog.forEach(function(el){ %>
-	    <h6>id:<%= el._id %></h6>
+	<% user.deallog.forEach(function(deal){ %>
+		<h6>
+			<% for(var i=0; i<foundUserDeallogs.length; i++){ %>
+				<% if(foundUserDeallogs[i]._id.toString() === deal._id.toString() ){ %>
+					id:<%= deal._id %>,
+					消費金額:<%= foundUserDeallogs[i].price %>,
+					時間:<UTC><%= UTC(foundUserDeallogs[i].date) %></UTC>,
+					<ul>
+						<% foundUserDeallogs[i].dealrecipe.forEach((el)=>{ %>
+						    <li>
+								<% for(var i=0; i<foundAllTreasures.length; i++){ %>
+									<% if(foundAllTreasures[i]._id.toString() === el.itemid.toString() ){ %>
+										<img src="<%= foundAllTreasures[i].image %>">
+										<%= foundAllTreasures[i].name %>,
+										描述:<%= foundAllTreasures[i].description %>,
+										數量:<%= el.qty %>,
+										價格:<%= el.price %>,
+										小計:<%= el.subtotal %>,
+										<% break; %>
+									<% } %>
+								<% } %>
+							</li>
+						<% }); %>
+					</ul>
+					<% break; %>
+				<% } %>
+			<% } %>
+		</h6>
 	<% });%>
 	<hr>
 	<h3>擁有文章:</h3>
 	<% user.articles.forEach(function(el){ %>
-	    <h6>id:<%= el._id %></h6>
+	    <h6>
+			<% for(var i=0; i<foundUserArticles.length; i++){ %>
+				<% if(foundUserArticles[i]._id.toString() === el.toString() ){ %>
+					<strong><%= foundUserArticles[i].title %></strong>
+					<%= foundUserArticles[i].description %>,
+					創造時間:<UTC><%= UTC(foundUserArticles[i].created) %></UTC>
+					<% if(foundUserArticles[i].isedited){ %>
+						, 最後編輯:<UTC><%= UTC(foundUserArticles[i].edited) %></UTC>
+					<% } %>
+					<% break; %>
+				<% } %>
+			<% } %>
+		</h6>
 	<% });%>
 	<hr>
 	
 	
-	
-	
 
-	
+</list>
 </div>
 
 <%- include("../partials/footer") %>
