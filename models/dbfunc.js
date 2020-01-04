@@ -64,10 +64,19 @@ dbfunc.updateById = function(objSchema, _id, renew){
 };
 
 
-
-
-
-
+dbfunc.findsByProp = function(objSchema, prop){
+	return new Promise(function(resolve, reject){
+		objSchema.find(prop, function(err, found){
+		    if(err){
+				console.log(err);
+				reject("database find error");
+			}
+			else{
+				resolve(found);
+			}	
+		});
+	});
+};
 
 
 

@@ -2,15 +2,11 @@
 var express = require("express");
 var router  = express.Router();  //var router  = express.Router({mergeParams: true});
 
-var dbfunc = require("../models/dbfunc");
 var middleware = require("../models/middleware");
 var eventfunc = require("../models/eventfunc");
-var apiCWB = require("./api/apicwb");
+
 
 var Event = require("../models/event");
-var User = require("../models/user");
-
-
 
 router.get("/", function(req, res){
 	Event.find({}, function(err, founds){
@@ -25,25 +21,19 @@ router.get("/", function(req, res){
 });
 
 
-router.get("/:id", function(req, res){
-
-	Event.findOne({_id: req.params.id}, function(err, founds){
-	    if (err) {
-	    	console.log(err);
-			res.send("events found error!");
-	    }
-	    else {
-			if(founds.eid == "0101"){
-				var passObj = {};
-				passObj.event = founds;
-				passObj.event_ex = founds;
-                res.render("events/e" + founds.eid, passObj); 
-			}else{
-			    res.render("events/e" + founds.eid, {event: founds}); 
-			}
-	        
-	    }
-	});
+router.get("/:id",
+	eventfunc.find,
+	eventfunc.eventPrepare,
+    function(req, res){
+		if(res.locals.running_event.isSuc){
+			res.render("events/e" + res.locals.running_event.eid, {
+				event: res.locals.running_event, 
+				extra: res.locals.running_event.result
+			}); 
+		}
+		else{
+            res.send(res.locals.running_event.result);
+		}
 });
 
 
@@ -60,14 +50,6 @@ router.post("/:id",
 
 	res.redirect("/events/" + req.params.id);
 });
-
-
-
-
-
-
-
-
 
 
 module.exports = router;

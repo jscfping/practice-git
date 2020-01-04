@@ -24,26 +24,28 @@ var eventsAry = [
 	new Event({
 		eid: "0101",
 		name: "雲氣象",
-	    description: "告訴本雲下雨概率有多少，本雲會送一些些獎金以答謝",
+	    description: "告訴本雲此預報最低溫為多少，本雲會送一些些獎金以答謝",
 	    isrunning: true,
 		reward_cash: 700,
     }),
-	new Event({
-		eid: "0102",
-		name: "達成率萬分之一",
-	    description: "達成率萬分之一的挑戰，你！敢挑戰嗎？挑戰成功有豐富獎金~~~",
-	    isrunning: true,
-		reward_cash: 1000,
-    }),
+	// new Event({
+	// 	eid: "0102",
+	// 	name: "達成率萬分之一",
+	//     description: "達成率萬分之一的挑戰，你！敢挑戰嗎？挑戰成功有豐富獎金~~~",
+	//     isrunning: true,
+	// 	reward_cash: 1000,
+    // }),
 	new Event({
 		eid: "1001",
 	    name: "登入即送!",
-	    description: "這雲站製作人瘋了！！！ 九星大禮登入即送！？！",
+	    description: "這雲Demo製作人瘋了！！！ 九星大禮登入即送！？！",
 	    isrunning: true,
-		reward_treasure:[{
-			id: "5e0c014e0738680ad3ffafdb",
-			qty: 1
-		}]
+		reward_treasure:[
+			{
+			    id: "11",
+			    qty: 1
+			},
+		]
     })
 	
 ];

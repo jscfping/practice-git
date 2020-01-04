@@ -259,9 +259,6 @@ app.post("/articles", middleware.isLogIned, function(req, res){
 		    res.send("article created error!");
 	    }
 		else{
-			console.log(article);
-			console.log("a new data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>added!");
-			
 			User.findOne({_id: req.user._id}, (err, founduser)=>{
 				if(err){
 					console.log(err);
@@ -275,9 +272,8 @@ app.post("/articles", middleware.isLogIned, function(req, res){
 							res.send("update user whom the article belonged to  error!");
 	                    }
 	                	else{
-	                        console.log(founduser + "was updated......" + sign)
+	                        res.redirect("/articles/");
 	                    }
-	                	res.redirect("/articles/");
 	                });
 				}
 			});
@@ -314,7 +310,6 @@ app.put("/articles/:id", middleware.checkOwnArticle, function(req, res){
 			res.send("articles database updated error...");
 	    }
 		else{
-			console.log(newdata + "was added......" + sign);
 			res.redirect("/articles/");
 	    }
 		
@@ -401,9 +396,6 @@ app.post("/myarticles", middleware.isLogIned, function(req, res){
 		    res.send("article created error!");
 	    }
 		else{
-			console.log(article);
-			console.log("a new data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>added!");
-			
 			User.findOne({_id: req.user._id}, (err, founduser)=>{
 				if(err){
 					console.log(err);
@@ -417,9 +409,8 @@ app.post("/myarticles", middleware.isLogIned, function(req, res){
 							res.send("update user whom the article belonged to  error!");
 	                    }
 	                	else{
-	                        console.log(founduser + "was updated......" + sign)
+	                        res.redirect("/myarticles/");
 	                    }
-	                	res.redirect("/myarticles/");
 	                });
 				}
 			});
@@ -456,7 +447,6 @@ app.put("/myarticles/:id", middleware.checkOwnArticle, function(req, res){
 			res.send("articles database updated error...");
 	    }
 		else{
-			console.log(newdata + "was added......" + sign);
 			res.redirect("/myarticles/");
 	    }
 		

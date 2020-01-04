@@ -1,9 +1,7 @@
-var express = require("express");
-var app = express();
 var request = require("request");
 
 
-var keyy = require("./keyy");
+var keyy = require("../../keyy");
 var apiCWB = {};
 var url = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=" +
     keyy.cwbkey +
@@ -25,46 +23,43 @@ apiCWB.init = function(){
 }
 
 
-apiCWB.chkNeedReq = function(req, res, next){
+apiCWB.chkNeedReq = function(){
 	var nowTime = getPassedTime();
 
 	if(nowTime.passedDay > apiCWB.passedDay){
 		apiCWB.passedDay = nowTime.passedDay;
 		apiCWB.passedDayQuarter = nowTime.passedDayQuarter;
 		apiCWB.isNeedReq = true;
-		next();
 	}
 	else if(nowTime.passedDayQuarter > apiCWB.passedDayQuarter){
 		apiCWB.passedDayQuarter = nowTime.passedDayQuarter;
 		apiCWB.isNeedReq = true;
-		next();
 	}else{
 		apiCWB.isNeedReq = false;
-		next();
 	}
 }
 
 
-apiCWB.sendReq = function(req, res, next){
-	if(apiCWB.failCounts>=15){
-        res.send("CWB api now failed...");
-	}
-	else{
-		if(apiCWB.isNeedReq){
-			apiCWB.getCWBData().then((resolve)=>{
-				apiCWB.failCounts = 0;
-				res.locals.apiCWBErr = null;
-				next();
-			}).catch((e)=>{
-				apiCWB.failCounts++;
-				res.locals.apiCWBErr = e;
-				next();
-			});
+apiCWB.sendReq = function(){
+    return new Promise((resolve, reject)=>{
+		if(apiCWB.failCounts>15){
+			reject("[api_CWB]CWB api now failed (>15 times)...");
 		}
 		else{
-			next();
+			if(apiCWB.isNeedReq){
+				apiCWB.getCWBData().then((res)=>{
+					apiCWB.failCounts = 0;
+					resolve(res);
+				}).catch((e)=>{
+					apiCWB.failCounts++;
+	                reject(e);
+				});
+			}
+			else{
+				resolve(apiCWB.data);
+			}
 		}
-	}
+	});
 }
 
 
@@ -87,7 +82,7 @@ apiCWB.getCWBData = function(){
 			}else{
 				console.log("[api_CWB]get respond from CWB...");
 				apiCWB.data = JSON.parse(body);
-				resolve(true);
+				resolve(apiCWB.data);
 			}
 
 		});

@@ -12,6 +12,11 @@
     <% isUidFinished = event.finish_uid.indexOf(uid) %>
 <% } %>
 
+<% var dataCWBApi = ["", "", ""] %>
+<% dataCWBApi[0] = extra["records"]["location"][0]["locationName"] + extra["records"]["location"][0]["weatherElement"][0]["time"][0]["startTime"]; %>
+<% dataCWBApi[1] = "溫度: " + extra["records"]["location"][0]["weatherElement"][2]["time"][0]["parameter"]["parameterName"] + "~ " + extra["records"]["location"][0]["weatherElement"][4]["time"][0]["parameter"]["parameterName"] + "℃ 降雨機率:" + extra["records"]["location"][0]["weatherElement"][1]["time"][0]["parameter"]["parameterName"] + "%"; %>
+<% dataCWBApi[2] = extra["records"]["location"][0]["weatherElement"][0]["time"][0]["parameter"]["parameterName"] +	", " + extra["records"]["location"][0]["weatherElement"][3]["time"][0]["parameter"]["parameterName"]; %>
+
 
 
 <%- include("../partials/header") %>
@@ -23,15 +28,17 @@
 	    <h6>獎勵金額: <%= event.reward_cash %></h6>
 		<h6>趕快來完成活動吧~~~~~</h6>
 		<h6>以下為氣象局拉到的API資料:</h6>
-		<h6><y1></y1></h6>
-	    <h6><y2></y2></h6>
-	    <h6><y3></y3></h6>
+		<h6><%= dataCWBApi[0] %></h6>
+	    <h6><%= dataCWBApi[1] %></h6>
+		<h6><%= dataCWBApi[2] %></h6>
 
 	    <% if(isUidFinished >= 0){ %>
 	    <h6><strong>恭喜~~~您已完成了此活動~~~~</strong></h6>
 	    <% }else if(isUidFinished === (-1)){ %>
-	        <form action="/events/<%= event._id %>" method="POST">
-	        	<input type="submit" value="吾已完成活動!">
+			<form action="/events/<%= event._id %>" method="POST">
+				<h6>告訴本雲寶寶，這個API預報最低溫為多少:</h6>
+				<input type="number" name="eventData[value0]" placeholder="title">
+	        	<input type="submit" value="送出!">
 	        </form>
 	    <% } %>
 	

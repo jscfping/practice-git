@@ -512,7 +512,6 @@ middleware.updateUser = function(req, res, next){
 			resolve.desc = req.body.user.desc;
 			
 			dbfunc.updateById(User, req.user._id, resolve).then(()=>{
-		        console.log("userdata edited...");
 		        next();
 	        }).catch((e)=>{
 	        	res.send(e + stu);
