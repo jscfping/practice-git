@@ -1,81 +1,49 @@
+
+<% var eventid = ["","",""]; %>
+<% for(var i=0; i<events.length; i++){ %>
+<%     if(events[i].eid === "1001"){ %>
+<%         eventid[0] = events[i]._id; %>
+<%     } %>
+<%     if(events[i].eid === "0101"){ %>
+<%         eventid[1] = events[i]._id; %>
+<%     } %>
+<%     if(events[i].eid === "0002"){ %>
+<%         eventid[2] = events[i]._id; %>
+<%     } %>
+<% } %>
+
+
 <%- include("partials/header") %>
 
 
 <div class="container">
-    <!-- <ul> -->
-        <!-- <li><strong>粗體</strong></li> -->
-        <!-- <li><em>斜體</em></li> -->
-    <!-- </ul> -->
-	
-	
-	<!-- <img src="images/testtt.jpg"> -->
-	<h3>雲文章</h3>
-	
-	<h4>個人</h4>
-	<p>
-	    我幾月幾號PO了一段話
-		    有人在下面回話
-	</p>
-	
-	<h4>好友</h4>
-	<h5>一個簡易過濾器</h5>
-	<p>
-	    朋友們幾月幾號PO了一段話
-		    有人在下面回話
-	</p>
-	
-	<h4>大家文</h4>
-	<p>
-	    很多大家文，只顯示留言多的幾篇
-	</p>
-	
-	<hr>
-	<h3>雲寶物</h3>
-	
-	<h4>熱賣產品</h4>
-	<p>
-	    表現出主打產品
-	</p>
-	
-	<h4>一般產品</h4>
-	<h5>一個簡易過濾器</h5>
-	<p>
-	    就很順序照著來
-	</p>
-	
-	<h5>寶物可以點進去看</h5>
-	<p>
-	    點進去商品可以看到全站擁有的人數、比例
-		大家的留言，可以有頭貼、土豪金、蹲絕不煩
-	</p>
-	
-	<hr>
-	<h3>雲活動</h3>
-	
-	<h4>幾個活動讓大家參加以拿$$</h4>
-	<ul>
-	    <li>填資料</li>
-		<li>PO文章</li>
-		<li>外部活動API1:心理測驗</li>
-		<li>外部活動API2:</li>
-	</ul>
-	
-	<hr>
-	<hr>
-	<hr>
-	
-	<h3>按右上角$$會進入購物車</h3>
-	<h3>按帳戶會出現相關設定</h3>
-	<ul>
-	    <li>個人首頁(大家都看的到的)</li>
-		<li>會員資料(只有自己看的到)</li>
-		<li>寶物庫</li>
-		<li>消費記錄</li>
-		<li>登出</li>
-	</ul>
-	
-	
-	
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+		<ol class="carousel-indicators">
+		  <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+		  <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+		  <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+		</ol>
+		<div class="carousel-inner">
+		  <div class="carousel-item active">
+			  
+			<a href="events/<%= eventid[0] %>"><img src="/images/banners/banner01.png" class="d-block w-100" alt="..."></a>
+		  </div>
+		  <div class="carousel-item">
+			<a href="events/<%= eventid[1] %>"><img src="/images/banners/banner02.png" class="d-block w-100" alt="..."></a href="events/<%= eventid[0] %>">
+		  </div>
+		  <div class="carousel-item">
+			<a href="events/<%= eventid[2] %>"><img src="/images/banners/banner03.png" class="d-block w-100" alt="..."></a href="events/<%= eventid[0] %>">
+		  </div>
+		</div>
+		<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+			<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			<span class="sr-only">Previous</span>
+		  </a>
+		  <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+			<span class="carousel-control-next-icon" aria-hidden="true"></span>
+			<span class="sr-only">Next</span>
+		</a>
+	  </div>
 </div>
     
 <%- include("partials/footer") %>

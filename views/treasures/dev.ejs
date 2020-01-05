@@ -4,47 +4,43 @@
 <%     } %>
 <% } %>
 
+<% //sort %>
+	<% alltreasures = alltreasures.sort(function (a, b) { %>
+    <%     return (a.id > b.id ? 1 : -1); %>
+<% }); %>
+
 
 <%- include("../partials/header") %>
 
-<div class="container"><list>
-    
-	
-	<% //sort %>
-	<% alltreasures = alltreasures.sort(function (a, b) { %>
-    <%     return (a.id > b.id ? 1 : -1); %>
-    <% }); %>
-	
-	
-	
+<div class="container">
+	<div class="row">
 	<% alltreasures.forEach(function(treasure){ %>
-	    
-	    <h6>_id: <%= treasure._id %></h6>
-	    <h6>id: <%= treasure.id %></h6>
-	    <h6>寶物名稱: <%= treasure.name %></h6>
-	    <img src="<%= treasure.image %>">
-	    <h6>描述: <%= treasure.description %></h6>
-	    <h6>分類: <%= treasure.category %></h6>
-	    <h6>價格: <%= treasure.price %></h6>
-	    <h6>擁有者數量: <%= treasure.ownercount %></h6>
-	    <h6>販賣中: <%= treasure.issold %></h6>
-	    <h6>上架日期: <UTC><%= UTC(treasure.releasedate) %></UTC></h6>
-	    <h6>是否推薦: <%= treasure.isrecommend %></h6>
-	    <h6>是否熱銷: <%= treasure.ishotsold %></h6>
-	    <h6>庫存: <%= treasure.stocks %></h6>
+		<div class="card col-sm-12 col-lg-5">
+			<div class="row justify-content-center">
+			    <img src="<%= treasure.image %>">
+		    </div>
+		    <h5 class="card-header"><%= treasure.name %></h5>
+			<div class="card-body">
+				<p class="card-text"><span class="alert alert-primary">描述</span> <%= treasure.description %></p>
+				<p class="card-text"><span class="alert alert-primary">價格</span> <%= treasure.price %></p>
+				<p class="card-text"><span class="alert alert-primary">庫存</span> <%= treasure.stocks %></p>
+				<p class="card-text"">
+					<button class="btn btn-info" onclick="location.href='/treasures/<%= treasure._id %>'">查看詳情</button>
+				</p>
+				<form action="/shoppinglist/<%= treasure._id %>?_method=PUT" method="POST">
+					<div class="form-group">
+						<input type="number" name="shoppinglist[qty]" value="0">
+					    <button type="submit" class="btn btn-success">放到購物車內</button>
+					</div>
+				</form>
 
-	    <form action="/shoppinglist/<%= treasure._id %>?_method=PUT" method="POST">
-			<input type="number" name="shoppinglist[qty]" value="0">
-	    	<input type="submit" value="放到購物車內">
-	    </form>
-	
-		<hr>
+			</div>
+			    
+		</div>
 	    <!-- comments -->
-
 	<% }); %>
 	
-	
-</list>
+	</div>
 </div>
 
 

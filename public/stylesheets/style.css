@@ -1,5 +1,5 @@
 .navbar {
-    background-color: #e3f2fd;
+    background-color:#cce5ff;
 }
 
 .container{
@@ -8,4 +8,28 @@
 
 list img{
     max-height: 50px;
+}
+
+a.btn{
+    margin-top: 7px;
+    margin-bottom: 7px;
+}
+
+.card{
+    margin:15px;
+}
+
+.card img {
+    max-height: 64px;
+    max-width: 500px;
+}
+
+.jumbotron{
+    background-color: aliceblue;
+}
+
+
+#normalimg{
+    max-height: 512px;
+    max-width: 512px;
 }

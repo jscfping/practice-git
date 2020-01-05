@@ -38,7 +38,7 @@ var eventsAry = [
 	new Event({
 		eid: "1001",
 	    name: "登入即送!",
-	    description: "這雲Demo製作人瘋了！！！ 九星大禮登入即送！？！",
+	    description: "這Demo製作人瘋了！！！ 九星大禮登入即送！？！",
 	    isrunning: true,
 		reward_treasure:[
 			{

@@ -76,7 +76,16 @@ var keyy = require("./keyy");
 
 //routes
 app.get("/",function(req, res){
-	res.render("index");
+	Event.find({}, function(err, founds){
+	    if (err) {
+	    	console.log(err);
+			res.send("events found error!");
+		}
+		else{
+			res.render("index", {events: founds});
+		}
+	    
+	})
 });
 
 
@@ -238,8 +247,6 @@ app.get("/user/:id", function(req, res){
 
 //R
 app.get("/articles", function(req, res){
-	
-	
     //if author:{id, username}
 	//what in populate run needs a OBJECTIDTYPE, not for author(get a []) but author.id
 	//and can be id's array
@@ -252,9 +259,15 @@ app.get("/articles", function(req, res){
 			res.send("article found error!");
 	    }
 	    else {
-	        res.render("articles/dev", {allarticles: allarticles, entry:entry}); 
+	        res.render("articles/dev", {allarticles: allarticles, entry: entry}); 
 	    }
 	});
+});
+
+
+app.get("/articles/new", middleware.isLogIned, function(req, res){
+	var entry = "/articles/"
+	res.render("articles/new", {entry: entry}); 
 });
 
 
@@ -394,6 +407,10 @@ app.get("/myarticles", middleware.isLogIned, function(req, res){
 	});
 });
 
+app.get("/myarticles/new", middleware.isLogIned, function(req, res){
+	var entry = "/myarticles/"
+	res.render("articles/new", {entry: entry}); 
+});
 
 
 //C
@@ -530,7 +547,19 @@ app.get("/treasures", function(req, res){
 
 });
 
+app.get("/treasures/:id", function(req, res){
+	
+	Treasure.findOne({_id: req.params.id}, function(err, found){
+	    if (err) {
+	    	console.log(err);
+			res.send("found treasure error!");
+	    }
+	    else {
+	        res.render("treasures/show", {treasure: found}); 
+	    }
+	});
 
+});
 
 
 
@@ -709,5 +738,3 @@ function checkInObjHasNull(obj){
 	}
 	return false;
 };
-
-

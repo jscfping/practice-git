@@ -44,12 +44,10 @@ eventfunc.eventPrepare = function(req, res, next){
 		case "e0101":
 			apiCWB.chkNeedReq();
 			apiCWB.sendReq().then((resolve)=>{
-				console.log("o");
 				res.locals.running_event.isSuc = true;
 				res.locals.running_event.result = resolve;
 				next();
 			}).catch((e)=>{
-				console.log("xxx");
 				res.locals.running_event.isSuc = false;
 				res.locals.running_event.result = e;
 				next();
